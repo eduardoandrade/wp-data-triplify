@@ -29,9 +29,15 @@ class Render {
 			$termo = $_POST["postType"];
 	?>
 			<div id="corpo">
-				
 				<h2>Você está procurando por <?php echo $termo; ?></h2>
-				<h4>Digite as equivalências: </h4>
+				
+				<h4> Defina a URI Base dos posts:</h4>
+				<?php $uriBase = get_option("#triplificator_uri_base#".$_POST["postType"], 'URI base');
+				echo"<input name='uriBase' value='".$uriBase."'  id='uriBase'/>"
+				?>
+				<br/>
+				
+				<h4>Defina as equivalências: </h4>
 <?php
 				global $wpdb;
 				
@@ -42,18 +48,22 @@ class Render {
 				
 				foreach($resultado as $resultadoX)
 				{
+					$valor = get_option($_POST["postType"]."#triplificator#".$resultadoX->meta_key, 'correspondencia');
+
 					echo "<div><p>".
 					$contador."- ".$resultadoX->meta_key." => ".
-					"<input class='input_triplify' value='correspondencia' id='correspondencia".$contador."'  mk='".$resultadoX->meta_key."'/>". // mv='".$resultadoX->meta_value."'
+					"<input class='input_triplify' value='". $valor ."' id='correspondencia".$contador."'  mk='".$resultadoX->meta_key."'/>". 
 					"</p></div>";
 					$contador++;
 				}
-				
+					
 				$tabela = $wpdb->prefix . 'posts';
-				foreach ( $wpdb->get_col( "DESC " . $tabela, 0 ) as $coluna ){//pegar todas as colunas da tabela wp_posts
+				foreach ( $wpdb->get_col( "DESC " . $tabela, 0 ) as $coluna ){
+					$valor = get_option($_POST["postType"]."#triplificator#".$coluna, 'correspondencia');
+					
 					echo "<div><p>".
 					$contador."- ".$coluna." => ".
-					"<input class='input_triplify_posts' value='correspondencia' id='correspondencia".$contador."' mk='".$coluna."' />".
+					"<input class='input_triplify_posts' value='". $valor ."' id='correspondencia".$contador."' mk='".$coluna."' />".
 					"</p></div>";
 					$contador++;
 				}
@@ -100,9 +110,11 @@ class Render {
 							arrayCorrespondencias.push(post_triplify);
 						}
 					});
+					var uri_base = $('#uriBase').val();
 					var data = {
 							'action' : 'triplify_action',
 							'post_type': post_type,
+							'uri_base': uri_base,
 							'arrayCorrespondencias': arrayCorrespondencias
 					};
 					$.post(ajaxurl, data, function(response) { 
