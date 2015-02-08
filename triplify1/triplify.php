@@ -5,7 +5,7 @@
  * @version 0.1
  */
 /*
-Plugin Name: Triplificator JSON
+Plugin Name: Data-Triplify JSON
 Description: Triplify your posts
 Author: Douglas Paranhos & Eduardo Andrade
 Version: 0.1
@@ -22,7 +22,7 @@ add_action('template_redirect', 'my_page_template_redirect' );
 add_action('init', 'custom_rewrite_tag', 10, 0);
 
 function triplificator_admin_actions(){
-	add_options_page('Triplificator', 'Triplificator', 'manage_options', __FILE__, 'triplify');
+	add_options_page('Data-Triplify', 'Data-Triplify', 'manage_options', __FILE__, 'triplify');
 }
 
 function custom_rewrite_tag() {
@@ -74,6 +74,7 @@ function triplify(){
 add_action( 'wp_ajax_triplify_action', 'triplify_action_callback' );
 function triplify_action_callback() {
 	
+	//saving correspondences
 	foreach(array_values($_POST['arrayCorrespondencias']) as $opcoes){
 		$option_name = $_POST["post_type"]."#triplificator#".$opcoes["coluna"];
 		$option_value = $opcoes["valor"];
@@ -81,6 +82,13 @@ function triplify_action_callback() {
 		if(get_option( $option_name, null ) == null) add_option($option_name, $option_value);
 		else update_option($option_name, $option_value);
 	}
+	
+	//saving base url
+	$option_name = "#triplificator_uri_base#".$_POST["post_type"];
+	$uri_base_value = $_POST['uri_base'];
+	
+	if(get_option( $option_name, null ) == null) add_option($option_name, $uri_base_value);
+	else update_option($option_name, $uri_base_value);
 	
 	wp_die();
 }
