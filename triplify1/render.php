@@ -4,9 +4,7 @@ class Render {
 	function __construct() {
 		
 	add_action( 'admin_footer', 'triplify_javascript' );
-	//add_action( 'admin_footer', 'my_action_javascript' );
-	//add_action( 'wp_ajax_triplify', 'triplify_callback' );
-	//add_action( 'wp_ajax_my_action', 'my_action_callback' );
+	//add_action( 'admin_footer', 'autocomplete_triplify' );
 	/*add_action( 'admin_enqueue_scripts', 'my_enqueue' );
 	add_action( 'wp_ajax_my_action', 'my_action_callback' );
 	do_action('admin_enqueue_scripts');
@@ -82,7 +80,9 @@ class Render {
 		<?php
 	
 		function triplify_javascript() { ?>
-			<script type="text/javascript" >
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+			<script type="text/javascript">
 			jQuery(document).ready(function($) {
 				$("#id").click(function(){
 					var post_type = $('#post_type').val(); 
@@ -125,9 +125,39 @@ class Render {
 					$("#corpo2").show(1000);
 					
 				});
+				var availableTags = [
+				  "dc:",
+				  "foaf:",
+				  "rdf:",
+				  "rdfs:"
+				];
+				$(".input_triplify_posts").autocomplete({
+				  source: availableTags
+				});
+				$(".input_triplify").autocomplete({
+				  source: availableTags
+				});
+				$(".input_triplify_posts").click(function(){
+					if($(this).val() == 'correspondencia'){
+						$(this).val('');
+					}
+				});
+				$(".input_triplify").click(function(){
+					if($(this).val() == 'correspondencia'){
+						$(this).val('');
+					}
+				});
 			});
 			</script> <?php
 		}
+		
+		/*function autocomplete_triplify(){?>
+			<script type="text/javascript" >
+			jQuery(document).ready(function($) {
+				
+			});
+			</script><?php
+		}*/
 
 	
 	}
