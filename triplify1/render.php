@@ -41,17 +41,6 @@ class Render {
 				
 				$correspondecias;
 				$contador = 1;
-				
-				foreach($resultado as $resultadoX)
-				{
-					$valor = get_option($_POST["postType"]."#triplificator#".$resultadoX->meta_key, 'correspondencia');
-
-					echo "<div><p>".
-					$contador."- ".$resultadoX->meta_key." => ".
-					"<input class='input_triplify' value='". $valor ."' id='correspondencia".$contador."'  mk='".$resultadoX->meta_key."'/>". 
-					"</p></div>";
-					$contador++;
-				}
 					
 				$tabela = $wpdb->prefix . 'posts';
 				foreach ( $wpdb->get_col( "DESC " . $tabela, 0 ) as $coluna ){
@@ -60,6 +49,17 @@ class Render {
 					echo "<div><p>".
 					$contador."- ".$coluna." => ".
 					"<input class='input_triplify_posts' value='". $valor ."' id='correspondencia".$contador."' mk='".$coluna."' />".
+					"</p></div>";
+					$contador++;
+				}
+				
+				foreach($resultado as $resultadoX)
+				{
+					$valor = get_option($_POST["postType"]."#triplificator#".$resultadoX->meta_key, 'correspondencia');
+
+					echo "<div><p>".
+					$contador."- ".$resultadoX->meta_key." => ".
+					"<input class='input_triplify' value='". $valor ."' id='correspondencia".$contador."'  mk='".$resultadoX->meta_key."'/>". 
 					"</p></div>";
 					$contador++;
 				}
@@ -257,7 +257,7 @@ class Render {
 					"rdf:value",
 					"rdf:List",
 					"rdf:nil",
-					"rdf:first"
+					"rdf:first",
 					"rdf:rest",
 					"rdf:XMLLiteral",
 					"rdfs:Resource",
@@ -274,7 +274,7 @@ class Render {
 					"rdfs:Container",
 					"rdfs:ContainerMembershipProperty",
 					"rdfs:member",
-					"rdfs:Datatype",
+					"rdfs:Datatype"
 				];
 				$(".input_triplify_posts").autocomplete({
 				  source: availableTags
