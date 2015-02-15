@@ -93,18 +93,18 @@ function triplify_action_callback() {
 		$coluna = $opcoes["coluna"];
 		$valor_correspondente = $opcoes["valor"];
 		
-		if($opcoes[uri] == 'true'){
+		if($opcoes["uri"] == 'true'){
 			$uri = true;
 		} else {
 			$uri = false;
 		}
 		
 		$tabela = 'wp_triplify_configurations';
-		$valor_anterior_banco = $wpdb->get_results("SELECT count(*) FROM $wpdb->triplify_configurations WHERE tipo=".$post." and coluna=".$coluna."");
-		if($valor_anterior_banco > 0){
-			$wpdb->update($tabela, array('tipo' => $_POST["post_type"], 'coluna' => $coluna, 'uri' => $uri, 'valor_correspondente' => $opcoes["valor"]), array('tipo' => $_POST["post_type"], 'coluna' => $coluna));
+		$valor_anterior_banco = $wpdb->get_row("SELECT uri FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$post."' and coluna='".$coluna."'", OBJECT);
+		if($valor_anterior_banco != null){
+			$wpdb->update($tabela, array('tipo' => $post, 'coluna' => $coluna, 'uri' => $uri, 'valor_correspondente' => $opcoes["valor"]), array('tipo' => $post, 'coluna' => $coluna));
 		} else {
-			$wpdb->insert($tabela, array('tipo' => $_POST["post_type"], 'coluna' => $coluna, 'uri' => $uri, 'valor_correspondente' => $opcoes["valor"]));
+			$wpdb->insert($tabela, array('tipo' => $post, 'coluna' => $coluna, 'uri' => $uri, 'valor_correspondente' => $opcoes["valor"]));
 		}
 		
 	}
