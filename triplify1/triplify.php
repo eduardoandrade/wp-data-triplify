@@ -1,19 +1,15 @@
 <?php
 
-/**
- * @package HelloDear
- * @version 0.1
- */
 /*
 Plugin Name: Data-Triplify JSON
-Description: Triplify your posts
+Description: Triplify your wordpress posts
 Author: Douglas Paranhos & Eduardo Andrade
 Version: 0.1
 Author URI: http://dontpad.com/lalala
 */
 
-@include_once dirname( __FILE__ ) .'/render.php';
-@include_once dirname( __FILE__ ) .'/jsontext.php';
+include_once dirname( __FILE__ ) .'/render.php';
+include_once dirname( __FILE__ ) .'/TYPE_TEXT.php';
 
 add_action('admin_init', 'flush_rewrite_rules');
 add_action('admin_menu', 'triplificator_admin_actions');
@@ -49,7 +45,7 @@ function triplificator_add_rewrite_rules(){
 
 function my_page_template_redirect(){
 	global $wp_query;
-	
+
 	$type = get_query_var( 'type' ) ? get_query_var( 'type' ) : false;
 	$structure = get_query_var( 'structure' ) ? get_query_var( 'structure' ) : 'JSON';
 
@@ -60,27 +56,57 @@ function my_page_template_redirect(){
 		}
 		
 		//chamar método que salva opções no banco
-		new JSON_TEXT( $type, $structure );
+		new TYPE_TEXT( $type, $structure );
 		exit();
 	}
 
 }
 
 function triplify(){
-
+	global $wpdb;
+	//creating datatable
+	$table_name = "wp_triplify_configurations";
+	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+		$sql = "CREATE TABLE $table_name (
+					id mediumint(9) NOT NULL AUTO_INCREMENT,
+					tipo VARCHAR(55) NOT NULL,
+					coluna VARCHAR(100) NOT NULL,
+					valor_correspondente VARCHAR(100) NOT NULL,
+					uri BOOLEAN NOT NULL,
+					UNIQUE KEY id (id)
+				);";
+		
+		$wpdb->query($sql);
+	}
+	echo "alalal";
 	$abc = new Render();
 }
 
 add_action( 'wp_ajax_triplify_action', 'triplify_action_callback' );
 function triplify_action_callback() {
 	
+	global $wpdb;
+	
 	//saving correspondences
 	foreach(array_values($_POST['arrayCorrespondencias']) as $opcoes){
-		$option_name = $_POST["post_type"]."#triplificator#".$opcoes["coluna"];
-		$option_value = $opcoes["valor"];
+		$post = $_POST["post_type"];
+		$coluna = $opcoes["coluna"];
+		$valor_correspondente = $opcoes["valor"];
 		
-		if(get_option( $option_name, null ) == null) add_option($option_name, $option_value);
-		else update_option($option_name, $option_value);
+		if($opcoes[uri] == 'true'){
+			$uri = true;
+		} else {
+			$uri = false;
+		}
+		
+		$tabela = 'wp_triplify_configurations';
+		$valor_anterior_banco = $wpdb->get_results("SELECT count(*) FROM $wpdb->triplify_configurations WHERE tipo=".$post." and coluna=".$coluna."");
+		if($valor_anterior_banco > 0){
+			$wpdb->update($tabela, array('tipo' => $_POST["post_type"], 'coluna' => $coluna, 'uri' => $uri, 'valor_correspondente' => $opcoes["valor"]), array('tipo' => $_POST["post_type"], 'coluna' => $coluna));
+		} else {
+			$wpdb->insert($tabela, array('tipo' => $_POST["post_type"], 'coluna' => $coluna, 'uri' => $uri, 'valor_correspondente' => $opcoes["valor"]));
+		}
+		
 	}
 	
 	//saving base url
