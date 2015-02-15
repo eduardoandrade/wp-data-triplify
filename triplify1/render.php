@@ -33,7 +33,7 @@ class Render {
 				?>
 				<br/>
 				
-				<h4>Defina as equivalências: </h4>
+				<h4>Defina as equivalências e marque o checkbox caso o resultado mostrado por essa coluna seja uma URI: </h4>
 <?php
 				global $wpdb;
 				
@@ -41,25 +41,47 @@ class Render {
 				
 				$correspondecias;
 				$contador = 1;
+				$post = $_POST["postType"];
 					
 				$tabela = $wpdb->prefix . 'posts';
 				foreach ( $wpdb->get_col( "DESC " . $tabela, 0 ) as $coluna ){
-					$valor = get_option($_POST["postType"]."#triplificator#".$coluna, 'correspondencia');
+					$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$post."' and coluna='".$coluna."'", OBJECT);
+					if($registro == null) {
+						$valor = 'correspondencia';
+						$checked = "";
+					}
+					else{
+						$valor = $registro->valor_correspondente;
+						if($registro->uri == true) $checked = 'checked';
+						else $checked = "";
+					}
+					
 					
 					echo "<div><p>".
-					$contador."- ".$coluna." => ".
-					"<input class='input_triplify_posts' value='". $valor ."' id='correspondencia".$contador."' mk='".$coluna."' />".
+					$contador."- <input type='checkbox' id='uri".$contador."' ".$checked."/>".
+					$coluna." => ".
+					"<input class='input_triplify_posts' value='". $valor ."' id='correspondencia".$contador."' mk='".$coluna."' contador='".$contador."'/>".
 					"</p></div>";
 					$contador++;
 				}
 				
 				foreach($resultado as $resultadoX)
 				{
-					$valor = get_option($_POST["postType"]."#triplificator#".$resultadoX->meta_key, 'correspondencia');
-
+					$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$post."' and coluna='".$resultadoX->meta_key."'", OBJECT);
+					if($registro == null){
+						$valor = 'correspondencia';
+						$checked = "";
+					}
+					else{
+						$valor = $registro->valor_correspondente;
+						if($registro->uri == true) $checked = 'checked';
+						else $checked = "";
+					}
+					
 					echo "<div><p>".
-					$contador."- ".$resultadoX->meta_key." => ".
-					"<input class='input_triplify' value='". $valor ."' id='correspondencia".$contador."'  mk='".$resultadoX->meta_key."'/>". 
+					$contador."- <input  type='checkbox' id='uri".$contador."' ".$checked."/>".
+					$resultadoX->meta_key." => ".
+					"<input class='input_triplify' value='". $valor ."' id='correspondencia".$contador."'  mk='".$resultadoX->meta_key."' contador='".$contador."'/>". 
 					"</p></div>";
 					$contador++;
 				}
@@ -72,8 +94,7 @@ class Render {
 		}?>
 		<div id="corpo2" style="display:none">
 			<h2>Opções salvas!</h2>
-			<!-- <h3>Acesse http://146.164.34.87:8080/Projeto/rest/handler/ + "valor aleatório"</h3> -->
-			<h3>Acesse seu_endereço/tri/<?php echo $termo; ?>/formato_desejado_dos_dados para obter os dados. </h3>
+			<h3>Acesse seu_endereço/tri/<?php echo $termo; ?>/formato_desejado_dos_dados para obter os dados. Caso o formato não seja especificado, o resultado será mostrado em JSON</h3>
 		</div>
 		<?php
 	
@@ -85,26 +106,50 @@ class Render {
 				$("#id").click(function(){
 					var post_type = $('#post_type').val(); 
 					var arrayCorrespondencias = new Array();
-					$('.input_triplify').each(function(k,v){
+					$('.input_triplify').each(function(k,v,w){
 						var mk 	= $(this).attr('mk');
-						//var mv  = $(this).attr('mv');
 						var v	= $(this).val();
+						var contadorX = $(this).attr('contador').toString();
 			
 						if($.trim(v) != 'correspondencia' &&  $.trim(v) != ''){
 							var post_triplify = new Object();
+							
 							post_triplify.coluna = mk;
 							post_triplify.valor = v;
+							
+							var identificador = "#uri";
+							var concatenate = identificador.concat(contadorX);
+							var checkbox = $(concatenate);
+							if(checkbox.is(":checked")){
+								post_triplify.uri = 'true';
+							} else {
+								post_triplify.uri = 'false';
+							}
+							
 							arrayCorrespondencias.push(post_triplify);
 						}
 					});
-					$('.input_triplify_posts').each(function(k,v){
+					$('.input_triplify_posts').each(function(k,v,w){
 						var mk 	= $(this).attr('mk');
 						var v	= $(this).val();
+						var contadorX = $(this).attr('contador').toString();
 			
 						if($.trim(v) != 'correspondencia' &&  $.trim(v) != ''){
+							
 							var post_triplify = new Object();
+							
 							post_triplify.coluna = mk;
 							post_triplify.valor = v;
+							
+							var identificador = "#uri";
+							var concatenate = identificador.concat(contadorX);
+							var checkbox = $(concatenate);
+							if(checkbox.is(":checked")){
+								post_triplify.uri = 'true';
+							} else {
+								post_triplify.uri = 'false';
+							}
+
 							arrayCorrespondencias.push(post_triplify);
 						}
 					});
