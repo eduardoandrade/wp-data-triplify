@@ -78,7 +78,7 @@ function triplify(){
 		
 		$wpdb->query($sql);
 	}
-	echo "alalal";
+
 	$abc = new Render();
 }
 
