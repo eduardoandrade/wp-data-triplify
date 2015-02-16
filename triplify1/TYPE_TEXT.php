@@ -32,7 +32,7 @@ class TYPE_TEXT {
 		//ver um jeito esperto de fazer isso, talvez switch (tem switch em php?), um for em um array?
 		if(strcmp(strtoupper($structure), 'JSON') == 0) new TextJSON($array_contendo_prefixos_usados, $posts); 
 		else if(strcmp(strtoupper($structure), 'RDF') == 0) new TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $posts);
-		else if(strcmp(strtoupper($structure), 'XML') == 0) new TextXML($posts);
+		else if(strcmp(strtoupper($structure), 'XML') == 0) new TextXML($option_URI_base ,$array_contendo_prefixos_usados, $posts);
 		else if(strcmp(strtoupper($structure), 'TURTLE') == 0) new TextTURTLE($posts);
 		
 		//exit();
