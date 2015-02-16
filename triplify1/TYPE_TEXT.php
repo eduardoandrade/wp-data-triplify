@@ -24,79 +24,16 @@ class TYPE_TEXT {
 			exit();
 		}
 		
-		//get configurations previously saved.
-		$array = $this->getConfigurationsPreviouslySaved($type);
-
-		//removing elements which correspondence were not defined
-		/*foreach($posts as $post){
-			foreach($post as $key => $postX){
-				if(!array_key_exists($key, array_keys($array))) {
-					unset($postX->$key);
-				}
-			}
-		}*/
-		global $wpdb;
-		$array_contendo_prefixos_usados = array();
+		$array = $this->getConfigurationsPreviouslySaved($type);//get configurations previously saved.
+		$array_contendo_prefixos_usados = $this->getPrefixesUsed($type, $posts, $array);//replacing keys for the ones the user defined for that type, and at the same time figuring out the prefixes from the columns
 		
-		//replacing keys for the ones the user defined for that type, and at the same time figuring out the prefixes from the columns
-		foreach($posts as $post){
-			foreach($array as $valores){
-				if (array_key_exists($valores[0], $post)) {
-					$post->$valores[1] = $post->$valores[0];
-					unset($post->$valores[0]);
-					if(strpos($valores[1], ":")){// if prefix contains ':'
-						$explode = explode(':', $valores[1]);
-						if(!in_array($explode[0], array_keys($array_contendo_prefixos_usados))){//if array don't contains
-							$uri = $wpdb->get_row("SELECT uri FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$type."' and coluna='".$valores[0]."'", OBJECT);//see if this is a URI column or not
-							$object = new prefixColumnUri();
-							$object->prefix = $explode[0];
-							$object->coluna = $explode[1];
-							$object->uri = $uri->uri;
-							array_push($array_contendo_prefixos_usados, $object);
-						}
-					}
-				}
-			}
-		}
-		
-		/*foreach($array_contendo_prefixos_usados as $object){
-			echo $object->prefix;
-			echo "======================";
-			echo $object->coluna;
-			echo "======================";
-			echo $object->uri;
-		}*/
-		
-		/*$contexts = array();
-		foreach($array_contendo_prefixos_usados as $prefixo){
-			if(strcmp(strtolower($prefixo), 'dc') == 0){
-				array_push($contexts, "\"dc\": \"http://purl.org/dc/elements/1.1\"");
-			} else if(strcmp(strtolower($prefixo),'foaf') == 0){
-				array_push($contexts, "\"foaf\": \"http://xmlns.com/foaf/0.1\"");
-			} else if(strcmp(strtolower($prefixo), 'rdf') == 0){
-				array_push($contexts, "\"rdf\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"");
-			} else if(strcmp(strtolower($prefixo), 'rdfs') == 0){
-				array_push($contexts, "\"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\"");
-			}
-		}*/
-
-		//var_dump($array_contendo_prefixos_usados);
+		$option_URI_base = get_option("#triplificator_uri_base#".$type);
 		
 		//ver um jeito esperto de fazer isso, talvez switch (tem switch em php?), um for em um array?
-		if(strcmp(strtoupper($structure), 'JSON') == 0){
-			//include_once dirname( __FILE__ ) .'/jsonld/jsonld.php';
-			
-			new TextJSON($array_contendo_prefixos_usados, $posts);
-		} else if(strcmp(strtoupper($structure), 'RDF') == 0){
-
-			$render = new TextRDF($posts);
-		} else if(strcmp(strtoupper($structure), 'XML') == 0){
-			
-			$render = new TextXML($posts);
-		} else if(strcmp(strtoupper($structure), 'TURTLE') == 0){
-			
-			$render = new TextTURTLE($posts);
-		} 
+		if(strcmp(strtoupper($structure), 'JSON') == 0) new TextJSON($array_contendo_prefixos_usados, $posts); 
+		else if(strcmp(strtoupper($structure), 'RDF') == 0) new TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $posts);
+		else if(strcmp(strtoupper($structure), 'XML') == 0) new TextXML($posts);
+		else if(strcmp(strtoupper($structure), 'TURTLE') == 0) new TextTURTLE($posts);
 		
 		//exit();
 		return;
@@ -121,5 +58,40 @@ class TYPE_TEXT {
 		return $array;
 	}
 	
+	function getPrefixesUsed($type, $posts, $array){
+		
+		global $wpdb;
+		$array_contendo_prefixos_usados = array();
+		
+		foreach($posts as $post){
+			foreach($array as $valores){
+				if (array_key_exists($valores[0], $post)) {
+					$post->$valores[1] = $post->$valores[0];
+					if(!strcmp(strtolower($valores[0]),"id")==0) unset($post->$valores[0]);
+					if(strpos($valores[1], ":")){// if prefix contains ':'
+						$explode = explode(':', $valores[1]);
+						$prefixos = array();
+						foreach($array_contendo_prefixos_usados as $prefixo){//get only prefixes
+							if(!in_array($prefixo->prefix, $prefixos)) array_push($prefixos, $prefixo->prefix);
+						}
+						
+						if(!in_array($explode[0], $prefixos)){//if array don't contains tha specific prefix, i add an object with that prefix
+							$uri = $wpdb->get_row("SELECT uri FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$type."' and coluna='".$valores[0]."'", OBJECT);//see if this is a URI column or not
+							$object = new prefixColumnUri();
+							$object->prefix = $explode[0];
+							$object->coluna = $explode[1];
+							$object->uri = $uri->uri;
+							$object->fullProperty = $valores[1];
+							array_push($array_contendo_prefixos_usados, $object);
+							//array_push($objetos_usados, $object);
+						}
+					}
+				}
+			}
+		}
+		//print_r($array_contendo_prefixos_usados);
+		//echo count($array_contendo_prefixos_usados);
+		return $array_contendo_prefixos_usados;
+	}
 }
 ?>
