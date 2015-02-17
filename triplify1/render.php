@@ -37,6 +37,10 @@ class Render {
 				<br/>
 				
 				<h4>Defina as equivalências e marque o checkbox caso o resultado mostrado por essa coluna seja uma URI: </h4>
+				<h6>Marque a opção "não me interessa" caso o valor daquela correspondência não te importar.</h6>
+				<h6>Caso essa opção seja marcada a coluna não aparecerá nos dados triplificados</h6>
+				<h6>Selecionar o "não me interessa" ou deixar a correspondência com vazio ou "correspondencia" dá no mesmo.</h6>
+				<h6>O checkbox serve apenas para a página ficar mais limpa caso o usuário ache que esteja muito poluída.</h6>
 <?php
 				global $wpdb;
 				
