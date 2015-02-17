@@ -12,10 +12,11 @@ class TextRDF {
 		
 		
 		foreach($prefixos as $prefix){//always there will be at maximum one of each.
-			if(strcmp(strtolower($prefix), 'dc') == 0) $RDF = $RDF."xmlns:".$object."= \"http://purl.org/dc/elements/1.1\" ";
-			else if(strcmp(strtolower($prefix), 'foaf') == 0) $RDF = $RDF."xmlns:".$object."= \"http://xmlns.com/foaf/0.1/\" ";
-			//else if(strcmp(strtolower($prefix), 'rdf') == 0) $RDF = $RDF.$object."= \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" ";
-			else if(strcmp(strtolower($prefix), 'rdfs') == 0) $RDF = $RDF."xmlns:".$object."= \"http://www.w3.org/2000/01/rdf-schema#\" ";
+			if((getPrefix($prefix), 'dc') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://purl.org/dc/elements/1.1\" ";
+			else if((getPrefix($prefix), 'foaf') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://xmlns.com/foaf/0.1/\" ";
+			else if((getPrefix($prefix), 'owl') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://www.w3.org/2002/07/owl#\" ";
+			else if((getPrefix($prefix), 'rdfs') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://www.w3.org/2000/01/rdf-schema#\" ";
+			else if((getPrefix($prefixo), 'xsd') == 0) $RDF = $RDF."xmlns:".$prefixo."= \"http://www.w3.org/2001/XMLSchema#\" ";
 		}
 		$RDF = $RDF.">";
 		echo htmlentities($RDF);
@@ -36,9 +37,6 @@ class TextRDF {
 		}
 		
 		echo htmlentities("</rdf:RDF>");
-	
-		//echo htmlentities($RDF);
-		//echo $RDF;
 	}
 	
 }
