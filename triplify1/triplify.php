@@ -29,6 +29,8 @@ function custom_rewrite_tag() {
 function triplificator_add_rewrite_rules(){
 
 	global $wp_rewrite;
+	
+	$url_base = get_option("triplify_url_base_dados", "tri");
 
 	$keytag = '%type%';
 	$keytag2 = '%structure%';
@@ -36,7 +38,7 @@ function triplificator_add_rewrite_rules(){
 	$wp_rewrite->add_rewrite_tag($keytag, '(.+?)', 'type=');
 	$wp_rewrite->add_rewrite_tag($keytag2, '(.+?)', 'structure=');
 	
-	$keywords_structure = $wp_rewrite->root . "tri/$keytag/$keytag2";
+	$keywords_structure = $wp_rewrite->root . "$url_base/$keytag/$keytag2";
 	$keywords_rewrite = $wp_rewrite->generate_rewrite_rules($keywords_structure);
 	
 	$wp_rewrite->rules = $keywords_rewrite + $wp_rewrite->rules;
