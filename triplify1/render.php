@@ -11,9 +11,12 @@ class Render {
 		if(!isset($_POST['termoPesquisado'])){
 	?>
 			<div>
+			<form action="" method="POST">
+				<h3>Digite a URL que deseja acessar para verificar os dados triplificados:</h3>
+				<br/>
+					<code><?php bloginfo('url'); ?>/</code> <input name="url_base" value="<?php echo get_option("triplify_url_base_dados", "tri");?>" id="postType_base"/>
 				<h3>Digite o post-type que deseja triplificar: </h3>
 				<br/>
-				<form action="" method="POST">
 					<input name="postType" value="" id="postType"/>
 					<button name="termoPesquisado" type="submit" class="button-primary">Pesquisar</button>
 				</form>	
@@ -23,6 +26,7 @@ class Render {
 		} else {
 			//$termo = pegaValores($_POST["postType"]);
 			$termo = $_POST["postType"];
+			$this->salvaUrlBase($_POST["url_base"]);
 	?>
 			<div id="corpo">
 				<h2>Você está procurando por <?php echo $termo; ?></h2>
@@ -364,5 +368,12 @@ class Render {
         echo $whatever;
 		wp_die();
 	}*/
+	
+	function salvaUrlBase($option){
+		$option_saved = get_option("triplify_url_base_dados", null);
+		if($option_saved == null) add_option("triplify_url_base_dados", $option);
+		else if(strcmp(strtolower($option_saved), strtolower($option)) == 0) return;
+		else update_option("triplify_url_base_dados", $option);
+	}
 }
  ?>
