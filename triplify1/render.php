@@ -24,8 +24,7 @@ class Render {
 			</div>
 	<?php
 		} else {
-			//$termo = pegaValores($_POST["postType"]);
-			$termo = $_POST["postType"];
+			$termo = $this->pegaValores($_POST["postType"]);
 			$this->salvaUrlBase($_POST["url_base"]);
 	?>
 			<div id="corpo">
@@ -61,10 +60,11 @@ class Render {
 					}
 					
 					
-					echo "<div><p>".
+					echo "<div id='conjunto$contador'><p>".
 					$contador."- <input type='checkbox' id='uri".$contador."' ".$checked."/>".
 					$coluna." => ".
 					"<input class='input_triplify_posts' value='". $valor ."' id='correspondencia".$contador."' mk='".$coluna."' contador='".$contador."'/>".
+					"não me interessa". "<input class='checkbox_nao_interessa' type='checkbox' id='nao_me_interessa$contador'/>".
 					"</p></div>";
 					$contador++;
 				}
@@ -82,10 +82,11 @@ class Render {
 						else $checked = "";
 					}
 					
-					echo "<div><p>".
+					echo "<div id='conjunto$contador'><p>".
 					$contador."- <input  type='checkbox' id='uri".$contador."' ".$checked."/>".
 					$resultadoX->meta_key." => ".
 					"<input class='input_triplify' value='". $valor ."' id='correspondencia".$contador."'  mk='".$resultadoX->meta_key."' contador='".$contador."'/>". 
+					"não me interessa". "<input class='checkbox_nao_interessa' type='checkbox' id='nao_me_interessa$contador'/>".
 					"</p></div>";
 					$contador++;
 				}
@@ -341,6 +342,18 @@ class Render {
 						$(this).val('');
 					}
 				});
+				$(".checkbox_nao_interessa").change(function(){
+					var idx = $(this).attr('id');
+					var contador = idx.replace("nao_me_interessa", "");
+					var contadorX = "#conjunto";
+					var elementoEsconder = contadorX.concat(contador);
+					
+					var correspondencia = "#correspondencia";
+					var correspondenciaX = correspondencia.concat(contador);
+					
+					$(correspondenciaX).val("");
+					$(elementoEsconder).hide();
+				});
 			});
 			</script> <?php
 		}
@@ -374,6 +387,14 @@ class Render {
 		if($option_saved == null) add_option("triplify_url_base_dados", $option);
 		else if(strcmp(strtolower($option_saved), strtolower($option)) == 0) return;
 		else update_option("triplify_url_base_dados", $option);
+	}
+	
+	function pegaValores($data) {
+		$data = trim($data);
+		$data = stripslashes($data);
+		$data = htmlspecialchars($data);
+		$data = strtolower($data);
+		return $data;
 	}
 }
  ?>
