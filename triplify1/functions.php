@@ -10,12 +10,23 @@ function utf8_strtr($str)
 
 function format_property($property)
 {
-	$result = utf8_encode($property);
-	$result = utf8_strtr($result);
+	//$result = utf8_encode($property);
+	$result = utf8_strtr($property);
+	//$result = utf8_strtr($result);
 	$result = str_replace(' ', '-', $result);
 	$result = strtolower($result);
 	
 	return  $result;
+}
+
+function getPrefix($Str){
+	if(strcmp($Str, 'dc') == 0) return "dc";
+	else if(strcmp(strtolower($Str), 'foaf') == 0) return "foaf";
+	else if(strcmp(strtolower($Str), 'owl') == 0) return "owl";
+	else if(strcmp(strtolower($Str), 'rdf') == 0) return "rdf";
+	else if(strcmp(strtolower($Str), 'rdfs') == 0) return "rdfs";
+	else if(strcmp(strtolower($Str), 'xsd') == 0) return "xsd";
+	
 }
 
 ?>
