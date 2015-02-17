@@ -18,23 +18,26 @@ class TextRDF {
 			else if(strcmp(strtolower($object->prefix), 'rdfs') == 0) $RDF = $RDF."xmlns:".$object->prefix."= \"http://www.w3.org/2000/01/rdf-schema#\" ";
 		}
 		$RDF = $RDF.">";
+		echo htmlentities($RDF);
 		
 		foreach($posts as $post){
-			$RDF= $RDF."<rdf:Description ";
+			$RDF= "<rdf:Description ";
 			$RDF= $RDF."rdf:about=\"".$option_URI_base.$post->ID."\"";
 			$RDF= $RDF.">";
+			echo htmlentities($RDF);
+			
 			foreach($array_contendo_prefixos_usados as $object){
 				$property = $object->fullProperty;
-				$RDF = $RDF."<".$object->fullProperty.">";
-				$RDF = $RDF.$post->$property;
-				$RDF = $RDF."</".$object->fullProperty.">";
+				echo htmlentities("<".$object->fullProperty.">");
+				echo $post->$property;
+				echo htmlentities("</".$object->fullProperty.">");
 			}
-			$RDF= $RDF."</rdf:Description>";
+			echo htmlentities("</rdf:Description>");
 		}
 		
-		$RDF = $RDF." </rdf:RDF>";
+		echo htmlentities("</rdf:RDF>");
 	
-		echo htmlentities($RDF);
+		//echo htmlentities($RDF);
 		//echo $RDF;
 	}
 	
