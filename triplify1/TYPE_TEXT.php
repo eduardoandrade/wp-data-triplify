@@ -25,15 +25,17 @@ class TYPE_TEXT {
 		}
 		
 		$array = $this->getConfigurationsPreviouslySaved($type);//get configurations previously saved.
-		$array_contendo_prefixos_usados = $this->getPrefixesUsed($type, $posts, $array);//replacing keys for the ones the user defined for that type, and at the same time figuring out the prefixes from the columns
+		$arrays = $this->getPrefixesUsedAndObjects($type, $posts, $array);//replacing keys for the ones the user defined for that type, and at the same time figuring out the prefixes from the columns
 		
+		$array_contendo_prefixos_usados = $arrays[0];
+		$prefixos = [1];
 		$option_URI_base = get_option("#triplificator_uri_base#".$type);
 		
 		//ver um jeito esperto de fazer isso, talvez switch (tem switch em php?), um for em um array?
-		if(strcmp(strtoupper($structure), 'JSON') == 0) new TextJSON($array_contendo_prefixos_usados, $posts); 
-		else if(strcmp(strtoupper($structure), 'RDF') == 0) new TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $posts);
-		else if(strcmp(strtoupper($structure), 'XML') == 0) new TextXML($option_URI_base ,$array_contendo_prefixos_usados, $posts);
-		else if(strcmp(strtoupper($structure), 'TURTLE') == 0) new TextTURTLE($posts);
+		if(strcmp(strtolower($structure), 'json') == 0) new TextJSON($prefixos, $posts); 
+		else if(strcmp(strtolower($structure), 'rdf') == 0) new TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
+		else if(strcmp(strtolower($structure), 'xml') == 0) new TextXML($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
+		else if(strcmp(strtolower($structure), 'turtle') == 0) new TextTURTLE($posts);
 		
 		//exit();
 		return;
@@ -58,10 +60,11 @@ class TYPE_TEXT {
 		return $array;
 	}
 	
-	function getPrefixesUsed($type, $posts, $array){
+	function getPrefixesUsedAndObjects($type, $posts, $array){
 		
 		global $wpdb;
-		$array_contendo_prefixos_usados = array();
+		$array_contendo_objetos_usados = array();
+		$prefixos = array();
 		
 		foreach($posts as $post){
 			foreach($array as $valores){
@@ -70,28 +73,27 @@ class TYPE_TEXT {
 					if(!strcmp(strtolower($valores[0]),"id")==0) unset($post->$valores[0]);
 					if(strpos($valores[1], ":")){// if prefix contains ':'
 						$explode = explode(':', $valores[1]);
-						$prefixos = array();
-						foreach($array_contendo_prefixos_usados as $prefixo){//get only prefixes
-							if(!in_array($prefixo->prefix, $prefixos)) array_push($prefixos, $prefixo->prefix);
+						foreach($array_contendo_objetos_usados as $object){//get only prefixes
+							if(!in_array(strtolower($object->prefix), $prefixos)) array_push($prefixos, strtolower($object->prefix));
 						}
 						
-						if(!in_array($explode[0], $prefixos)){//if array don't contains tha specific prefix, i add an object with that prefix
-							$uri = $wpdb->get_row("SELECT uri FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$type."' and coluna='".$valores[0]."'", OBJECT);//see if this is a URI column or not
-							$object = new prefixColumnUri();
-							$object->prefix = $explode[0];
-							$object->coluna = $explode[1];
-							$object->uri = $uri->uri;
-							$object->fullProperty = $valores[1];
-							array_push($array_contendo_prefixos_usados, $object);
-							//array_push($objetos_usados, $object);
-						}
+						//if(!in_array($explode[0], $prefixos)){//if array don't contains tha specific prefix, i add an object with that prefix
+						$uri = $wpdb->get_row("SELECT uri FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$type."' and coluna='".$valores[0]."'", OBJECT);//see if this is a URI column or not
+						$object = new prefixColumnUri();
+						$object->prefix = $explode[0];
+						$object->coluna = $explode[1];
+						$object->uri = $uri->uri;
+						$object->fullProperty = $valores[1];
+						if(!in_array($object, $array_contendo_objetos_usados)) array_push($array_contendo_objetos_usados, $object);
+						//array_push($objetos_usados, $object);
+						//} else
 					}
 				}
 			}
 		}
-		//print_r($array_contendo_prefixos_usados);
-		//echo count($array_contendo_prefixos_usados);
-		return $array_contendo_prefixos_usados;
+		
+		$arraysNecessarios = array($array_contendo_objetos_usados, $prefixos);
+		return $arraysNecessarios;
 	}
 }
 ?>
