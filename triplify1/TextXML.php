@@ -11,12 +11,12 @@ class TextXML {
 		foreach($posts as $post){
 			$XML = "<post ";
 			foreach($prefixos as $prefixo){//always there will be at maximum one of each.
-				if((getPrefix($prefixo), 'dc') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://purl.org/dc/elements/1.1\" ";
-				else if((getPrefix($prefixo), 'foaf') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://xmlns.com/foaf/0.1/\" ";
-				else if((getPrefix($prefixo), 'owl') == 0) $XML = $XML."xmlns:".$prefix."= \"http://www.w3.org/2002/07/owl#\" ";
-				else if((getPrefix($prefixo), 'rdf') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" ";
-				else if((getPrefix($prefixo), 'rdfs') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://www.w3.org/2000/01/rdf-schema#\" ";
-				else if((getPrefix($prefixo), 'xsd') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://www.w3.org/2001/XMLSchema#\" ";
+				if(strcmp(getPrefix($prefixo), 'dc') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://purl.org/dc/elements/1.1\" ";
+				else if(strcmp(getPrefix($prefixo), 'foaf') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://xmlns.com/foaf/0.1/\" ";
+				else if(strcmp(getPrefix($prefixo), 'owl') == 0) $XML = $XML."xmlns:".$prefix."= \"http://www.w3.org/2002/07/owl#\" ";
+				else if(strcmp(getPrefix($prefixo), 'rdf') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" ";
+				else if(strcmp(getPrefix($prefixo), 'rdfs') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://www.w3.org/2000/01/rdf-schema#\" ";
+				else if(strcmp(getPrefix($prefixo), 'xsd') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://www.w3.org/2001/XMLSchema#\" ";
 			}
 			$XML = $XML.">";
 			$XML = $XML."<URI>";
