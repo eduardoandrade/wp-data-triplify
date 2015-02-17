@@ -77,7 +77,6 @@ class TYPE_TEXT {
 							if(!in_array(strtolower($object->prefix), $prefixos)) array_push($prefixos, strtolower($object->prefix));
 						}
 						
-						//if(!in_array($explode[0], $prefixos)){//if array don't contains tha specific prefix, i add an object with that prefix
 						$uri = $wpdb->get_row("SELECT uri FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$type."' and coluna='".$valores[0]."'", OBJECT);//see if this is a URI column or not
 						$object = new prefixColumnUri();
 						$object->prefix = $explode[0];
@@ -85,8 +84,6 @@ class TYPE_TEXT {
 						$object->uri = $uri->uri;
 						$object->fullProperty = $valores[1];
 						if(!in_array($object, $array_contendo_objetos_usados)) array_push($array_contendo_objetos_usados, $object);
-						//array_push($objetos_usados, $object);
-						//} else
 					}
 				}
 			}
