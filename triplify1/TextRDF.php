@@ -12,11 +12,11 @@ class TextRDF {
 		
 		
 		foreach($prefixos as $prefix){//always there will be at maximum one of each.
-			if((getPrefix($prefix), 'dc') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://purl.org/dc/elements/1.1\" ";
-			else if((getPrefix($prefix), 'foaf') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://xmlns.com/foaf/0.1/\" ";
-			else if((getPrefix($prefix), 'owl') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://www.w3.org/2002/07/owl#\" ";
-			else if((getPrefix($prefix), 'rdfs') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://www.w3.org/2000/01/rdf-schema#\" ";
-			else if((getPrefix($prefixo), 'xsd') == 0) $RDF = $RDF."xmlns:".$prefixo."= \"http://www.w3.org/2001/XMLSchema#\" ";
+			if(strcmp(getPrefix($prefix), 'dc') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://purl.org/dc/elements/1.1\" ";
+			else if(strcmp(getPrefix($prefix), 'foaf') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://xmlns.com/foaf/0.1/\" ";
+			else if(strcmp(getPrefix($prefix), 'owl') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://www.w3.org/2002/07/owl#\" ";
+			else if(strcmp(getPrefix($prefix), 'rdfs') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://www.w3.org/2000/01/rdf-schema#\" ";
+			else if(strcmp(getPrefix($prefixo), 'xsd') == 0) $RDF = $RDF."xmlns:".$prefixo."= \"http://www.w3.org/2001/XMLSchema#\" ";
 		}
 		$RDF = $RDF.">";
 		echo htmlentities($RDF);
