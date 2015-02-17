@@ -11,6 +11,8 @@ class TextJSON {
 		$context = array();
 		
 		foreach($posts as $post){
+			$property = "rdf:about";
+			$post->$property = $option_URI_base.$post->ID;
 			foreach($array_contendo_prefixos_usados as $object){
 				if(strcmp(getPrefix($object->prefix), 'dc') == 0){
 					if($object->uri == 1){
