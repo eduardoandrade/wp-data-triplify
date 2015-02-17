@@ -98,7 +98,7 @@ class Render {
 		}?>
 		<div id="corpo2" style="display:none">
 			<h2>Opções salvas!</h2>
-			<h3>Acesse seu_endereço/tri/<?php echo $termo; ?>/formato_desejado_dos_dados para obter os dados. Caso o formato não seja especificado, o resultado será mostrado em JSON</h3>
+			<h3>Acesse <code><?php bloginfo('url');?><?php echo get_option("triplify_url_base_dados", "tri")?>/<?php echo $termo; ?>/formato_desejado_dos_dados</code> para obter os dados. Caso o formato não seja especificado, o resultado será mostrado em JSON</h3>
 		</div>
 		<?php
 	
