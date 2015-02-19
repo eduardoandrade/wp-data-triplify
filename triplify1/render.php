@@ -7,11 +7,9 @@ class Render {
 	function __construct() {
 		
 	add_action( 'admin_footer', 'triplify_javascript' );
-	/*add_action( 'admin_enqueue_scripts', 'my_enqueue' );
-	do_action('admin_enqueue_scripts');
-	do_action('wp_ajax_my_action');*/
 		
 		if(!isset($_POST['termoPesquisado']) && !isset($_POST['triplify-csv-file'])){
+			//print_r($_POST);
 	?>
 			<div>
 				<form action="" method="POST">
@@ -39,17 +37,16 @@ class Render {
 					<input name="postType" value="" id="postType"/>
 					<button name="termoPesquisado" type="submit" class="button-primary">Pesquisar</button>
 				</form>
-				<form action="" method="POST">
+				<form action="" method="POST" enctype="multipart/form-data"><!-- enctype="multipart/form-data" -->
 					<h3>Desejo fazer leitura de arquivo CSV com tipo e configurações lá contidas: </h3>
 					<br/>
 					<div class="pure-control-group">
 						<label>Arquivo</label>
 						<input id="triplify-file" name="triplify-csv-file" type="file" value="" data-validate="validate(required)" />
-						<button name="upload_arquivo" type="submit" class="button-primary">Importar</button>
+						<button name="triplify-csv-file" type="submit" class="button-primary">Importar</button>
 					</div>
-				</div>
-			</form>
-		</div>
+				</form>
+			</div>
 	<?php
 		} else if(isset($_POST["postType"])){
 			$termo = $this->pegaValores($_POST["postType"]);
@@ -129,9 +126,16 @@ class Render {
 				<button id="id" name="triplify" class="button-primary">Salvar opções</button>
 			</div><?php
 		} else if(isset($_POST['triplify-csv-file'])){
-			
-			if((new ReadCSVFile($_POST['triplify-csv-file'])) == true) echo "SALVOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!";
-			else echo "OVLASSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS";
+			$objeto = new ReadCSVFile($_POST['triplify-csv-file']);
+			if(($objeto->retorno) == true) {
+				?><div>
+					<h2>Opções salvas!</h2>
+				</div><?php
+			} else{
+				?><div>
+					<h2>Falha no upload do arquivo! Verifique se o arquivo de fato é um .csv e se sua estrutura está de acordo com o esperado e tente novamente!</h2>
+				</div><?php
+			}
 			
 		}?>
 		<div id="corpo2" style="display:none">
@@ -396,28 +400,6 @@ class Render {
 		}
 	
 	}
-		/*function my_enqueue($hook) {
-		echo "aaaaaaaaaaa";
-		if( 'index.php' != $hook ) {
-			// Only applies to dashboard panel
-			return;
-		}
-		echo "bbbbbbbb";
-		wp_enqueue_script( 'ajax-script', plugins_url( '/js/scripts.js', __FILE__ ), array('jquery') );
-		echo "ccccccccc";
-		// in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
-		wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => 1234 ) );
-		echo "dddddddd";
-	}
-	
-	
-	function my_action_callback() {
-		global $wpdb;
-		$whatever = intval( $_POST['whatever'] );
-		$whatever += 10;
-        echo $whatever;
-		wp_die();
-	}*/
 	
 	function salvaUrlBase($option){
 		$option_saved = get_option("triplify_url_base_dados", null);
