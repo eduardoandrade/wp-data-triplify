@@ -1,0 +1,139 @@
+<?php
+
+class ReadCSVFile {
+	
+	// @var string CSV upload directory name
+    public $uploadDir = 'data-triplify';
+	
+	// @var containing all types to triplify
+	public $types = null;
+	
+	// @var containing all url-bases of the post-types triplified
+	public $urls_bases = null;
+	
+	// @var correspondences of the triplify
+	public $correspondencias = null;
+	
+	function __construct($file) {
+		
+		if($this->triflify_csv_header($file) == false || $this->triflify_csv_file_data_rows($file) == false) return false;
+		return true;
+	}
+	
+	function triflify_csv_header($fileUpload){
+		$this->triplify_check_upload_dir_permission();
+		ini_set("auto_detect_line_endings", true);
+		
+		$file = $this->triplify_get_upload_directory() . "/$fileUpload";
+		
+		// Check whether file is present in the given file location
+        $fileexists = file_exists($file);
+		echo $file;
+        if ($fileexists) {
+            $resource = fopen($file, 'r');
+			echo "uhuuuuuuuuuuuuuuuuul";
+			$init = 0;
+            while ($keys = fgetcsv($resource, '', ';', '"')) {//$this->delim
+                if ($init == 0) {
+                    $this->types = $keys;
+					break;
+				}else if($init == 1){
+					$this->urls_bases = $keys;
+					break;
+				}
+                $init++;
+            }
+			
+			if(count($this->types) != count($this->urls_bases)){
+				return false;
+			}
+			
+			$contador = 0;
+			foreach($this->types as $type){
+				$option = "#triplificator_uri_base#".$type;
+				
+				if(get_option($option, null) != null) add_option($option, $this->urls_bases[$contador]);
+				else update_option($option, $this->urls_bases[$contador]);
+				
+				$contador++;
+			}
+			
+            fclose($resource);
+            ini_set("auto_detect_line_endings", false);
+			return true;
+        }
+		return false;
+	}
+	
+	function triflify_csv_file_data_rows($file){//$delim
+		$this->triplify_check_upload_dir_permission();
+		ini_set("auto_detect_line_endings", true);
+		
+		//$data_rows = array();
+		global $wpdb;
+		
+		# Check whether file is present in the given file location
+        $fileexists = file_exists($file);
+
+        if ($fileexists) {
+            $resource = fopen($file, 'r');
+
+            $init = 0;
+            while ($keys = fgetcsv($resource, '', ';', '"')) {//$this->delim
+                if ($init != 0 && $init != 1) {
+					$explode = explode(':', keys[1]);
+					$object = new prefixColumnUri();
+					$object->prefix = $explode[0];
+					$object->coluna = $explode[1];
+					$object->uri = $keys[2];
+					$object->fullProperty = keys[1];
+					
+					foreach($this->types as $type){
+						$jaExisteNoBanco = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$type."' and coluna='".$object->fullProperty."'", OBJECT);
+						if($jaExisteNoBanco != null){
+							$wpdb->update($tabela, array('tipo' => $type, 'coluna' => $keys[0], 'uri' => $object->uri, 'valor_correspondente' => $object->fullProperty), array('tipo' => $type, 'coluna' => $keys[0]));
+						} else{
+							$wpdb->insert($tabela, array('tipo' => $type, 'coluna' => $keys[0], 'uri' => $object->uri, 'valor_correspondente' => $object->fullProperty));
+						}
+					}
+				}
+				
+                $init++;
+            }
+            fclose($resource);
+            ini_set("auto_detect_line_endings", false);
+        } else {
+			return false;
+		} 
+		
+		return true;
+		//return $data_rows;
+	}
+	
+    function triplify_get_upload_directory(){
+        $upload_dir = wp_upload_dir();
+        return $upload_dir ['basedir'] . "/" . $this->uploadDir;
+    }
+	
+	function triplify_check_upload_dir_permission(){
+        $this->triplify_get_upload_directory();
+        $upload_dir = wp_upload_dir();
+        if (!is_dir($upload_dir ['basedir'])) {
+            print " <div style='font-size:16px;margin-left:20px;margin-top:25px;'>UPLOAD PERMISSION ERROR 
+			</div><br/>
+			<div style='margin-left:20px;'>
+			<form class='add:the-list: validate' method='post' action=''>
+			<input type='submit' class='button-primary' name='Import Again' value='IMPORT AGAIN'/>
+			</form>
+			</div>";
+            $this->freeze();
+        } else {
+            if (!is_dir($this->triplify_get_upload_directory())) {
+                wp_mkdir_p($this->triplify_get_upload_directory());
+            }
+        }
+    }
+	
+}
+
+?>
