@@ -12,7 +12,7 @@ class TextTURTLE {
 			$parser->parse($JSON);
 			print_r($parser);*/
 			
-		print_r($posts);
+		echo "format not suported yet.";
 	}
 	
 }
