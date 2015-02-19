@@ -138,7 +138,7 @@ class Render {
 				</div><?php
 			} else{
 				?><div>
-					<h2>Falha no upload do arquivo! Verifique se o arquivo de fato é um .csv e se sua estrutura está de acordo com o esperado e tente novamente!</h2>
+					<h2>Falha no upload do arquivo! <?php echo $objeto->mensagemErro?></h2>
 				</div><?php
 			}
 			
