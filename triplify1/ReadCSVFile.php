@@ -62,7 +62,7 @@ class ReadCSVFile {
 					}
 					foreach($keys as $key){
 						if(trim($key) == ""){
-							$this->mensagemErro = "A linha 1, com os posts_types está vazia ou contém 2 ; seguidos.";
+							$this->mensagemErro = "A linha 1, com os posts_types está vazia ou contém 2 ';' seguidos.";
 							$tdCerto = false;
 							return $tdCerto;
 							die();
@@ -82,7 +82,7 @@ class ReadCSVFile {
 					
 					foreach($keys as $key){
 						if(trim($key) == ""){
-							$this->mensagemErro = "A linha 2, com os posts_types possui 2 ; seguidos.";
+							$this->mensagemErro = "A linha 2, com os posts_types possui 2 ';' seguidos.";
 							$tdCerto = false;
 							return $tdCerto;
 							die();
