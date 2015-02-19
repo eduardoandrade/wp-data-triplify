@@ -16,7 +16,7 @@ class TYPE_TEXT {
 	
 	function show_data($type, $structure){
 
-		$posts_array = array( 'post_type' => $type );
+		$posts_array = array( 'posts_per_page' => 1000, 'post_type' => $type );
 		$posts = get_posts($posts_array);
 		
 		if(empty($posts)){
@@ -25,6 +25,10 @@ class TYPE_TEXT {
 		}
 		
 		$array = $this->getConfigurationsPreviouslySaved($type);//get configurations previously saved.
+		if(empty($array)){
+			echo "This post_type exists but has not been triplified yet.";
+			return;
+		}
 		$arrays = $this->getPrefixesUsedAndObjects($type, $posts, $array);//replacing keys for the ones the user defined for that type, and at the same time figuring out the prefixes from the columns
 		
 		$array_contendo_prefixos_usados = $arrays[0];
@@ -32,7 +36,7 @@ class TYPE_TEXT {
 		$option_URI_base = get_option("#triplificator_uri_base#".$type);
 		
 		//ver um jeito esperto de fazer isso, talvez switch (tem switch em php?), um for em um array?
-		if(strcmp(strtolower($structure), 'json') == 0) new TextJSON($prefixos, $posts); 
+		if(strcmp(strtolower($structure), 'json') == 0) new TextJSON($option_URI_base, $array_contendo_prefixos_usados, $posts); 
 		else if(strcmp(strtolower($structure), 'rdf') == 0) new TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
 		else if(strcmp(strtolower($structure), 'xml') == 0) new TextXML($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
 		else if(strcmp(strtolower($structure), 'turtle') == 0) new TextTURTLE($posts);
