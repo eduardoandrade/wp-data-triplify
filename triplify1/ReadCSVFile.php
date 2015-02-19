@@ -14,38 +14,83 @@ class ReadCSVFile {
 	// @var correspondences of the triplify
 	public $correspondencias = null;
 	
+	public $triplify_csv_file_name = null;
+	
+	public $retorno = null;
+	
 	function __construct($file) {
 		
-		if($this->triflify_csv_header($file) == false || $this->triflify_csv_file_data_rows($file) == false) return false;
-		return true;
+		$retorno = $this->dc_move_file();
+		if($retorno == false) return $retorno;
+		
+		if($this->triflify_csv_header() == false || $this->triflify_csv_file_data_rows() == false){
+			$retorno = false;
+			return $retorno;
+			die();
+		}
+		else {
+			$retorno = true;
+			return $retorno;
+			die();
+		}
 	}
 	
-	function triflify_csv_header($fileUpload){
+	function triflify_csv_header(){
+		$tdCerto = true;
 		$this->triplify_check_upload_dir_permission();
 		ini_set("auto_detect_line_endings", true);
 		
-		$file = $this->triplify_get_upload_directory() . "/$fileUpload";
-		
+		$file = $this->triplify_get_upload_directory() . "/$this->triplify_csv_file_name";
+		//echo $file;
 		// Check whether file is present in the given file location
         $fileexists = file_exists($file);
-		echo $file;
         if ($fileexists) {
             $resource = fopen($file, 'r');
-			echo "uhuuuuuuuuuuuuuuuuul";
+			if($resource == false) echo $resource;
 			$init = 0;
             while ($keys = fgetcsv($resource, '', ';', '"')) {//$this->delim
                 if ($init == 0) {
+					//print_r($keys);
                     $this->types = $keys;
-					break;
+					if(count($keys)<1){
+						$tdCerto = false;
+						return $tdCerto;
+						die();
+					}
+					foreach($keys as $key){
+						if(trim($key) == ""){
+							$tdCerto = false;
+							return $tdCerto;
+							die();
+						}
+					}
+					
 				}else if($init == 1){
+					//print_r($keys);
 					$this->urls_bases = $keys;
+					echo count($keys).":";
+					if(count($keys)<1){
+						$tdCerto = false;
+						return $tdCerto;
+						die();
+					}
+					
+					foreach($keys as $key){
+						if(trim($key) == ""){
+							$tdCerto = false;
+							return $tdCerto;
+							die();
+						}
+					}
+					
 					break;
 				}
                 $init++;
             }
-			
+			//echo " ".count($this->types)."::".count($this->urls_bases);
 			if(count($this->types) != count($this->urls_bases)){
-				return false;
+				$tdCerto = false;
+				return $tdCerto;
 			}
 			
 			$contador = 0;
@@ -60,20 +105,28 @@ class ReadCSVFile {
 			
             fclose($resource);
             ini_set("auto_detect_line_endings", false);
-			return true;
+			return $tdCerto;
         }
-		return false;
+		
+		$tdCerto = false;
+		return $tdCerto;
+		die();
 	}
 	
-	function triflify_csv_file_data_rows($file){//$delim
+	function triflify_csv_file_data_rows(){//$delim
+		$tdCerto = true;
+		
 		$this->triplify_check_upload_dir_permission();
 		ini_set("auto_detect_line_endings", true);
 		
 		//$data_rows = array();
 		global $wpdb;
 		
+		$file = $this->triplify_get_upload_directory() . "/$this->triplify_csv_file_name";
 		# Check whether file is present in the given file location
         $fileexists = file_exists($file);
+		
+		$tabela = "wp_triplify_configurations";
 
         if ($fileexists) {
             $resource = fopen($file, 'r');
@@ -81,15 +134,20 @@ class ReadCSVFile {
             $init = 0;
             while ($keys = fgetcsv($resource, '', ';', '"')) {//$this->delim
                 if ($init != 0 && $init != 1) {
-					$explode = explode(':', keys[1]);
+					if(count($keys != 3) && count($keys != 0)){
+						$tdCerto = false;
+						return $tdCerto;
+						die();
+					}
+					$explode = explode(':', $keys[1]);
 					$object = new prefixColumnUri();
 					$object->prefix = $explode[0];
 					$object->coluna = $explode[1];
 					$object->uri = $keys[2];
-					$object->fullProperty = keys[1];
+					$object->fullProperty = $keys[1];
 					
 					foreach($this->types as $type){
-						$jaExisteNoBanco = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$type."' and coluna='".$object->fullProperty."'", OBJECT);
+						$jaExisteNoBanco = $wpdb->get_row("SELECT * FROM $tabela WHERE tipo='".$type."' and coluna='".$keys[0]."'", OBJECT);
 						if($jaExisteNoBanco != null){
 							$wpdb->update($tabela, array('tipo' => $type, 'coluna' => $keys[0], 'uri' => $object->uri, 'valor_correspondente' => $object->fullProperty), array('tipo' => $type, 'coluna' => $keys[0]));
 						} else{
@@ -103,21 +161,25 @@ class ReadCSVFile {
             fclose($resource);
             ini_set("auto_detect_line_endings", false);
         } else {
-			return false;
+			$tdCerto = false;
+			return $tdCerto;
+			die();
 		} 
-		
-		return true;
-		//return $data_rows;
+		$tdCerto = false;
+		return $tdCerto;
 	}
 	
     function triplify_get_upload_directory(){
         $upload_dir = wp_upload_dir();
+		//print_r($upload_dir);
         return $upload_dir ['basedir'] . "/" . $this->uploadDir;
     }
 	
 	function triplify_check_upload_dir_permission(){
         $this->triplify_get_upload_directory();
         $upload_dir = wp_upload_dir();
+		
+		//print_r ($upload_dir);
         if (!is_dir($upload_dir ['basedir'])) {
             print " <div style='font-size:16px;margin-left:20px;margin-top:25px;'>UPLOAD PERMISSION ERROR 
 			</div><br/>
@@ -134,6 +196,29 @@ class ReadCSVFile {
         }
     }
 	
+	function dc_move_file(){
+        $tdCerto = false;
+		if ($_FILES ["triplify-csv-file"] ["error"] == 0) {
+			//echo "bbbbbbbbbbbbbbbbbbbbbbbbbb";
+            $tmp_name = $_FILES ["triplify-csv-file"] ["tmp_name"];
+		//echo "aaaaaaaaaaaaaaaaaaaaaaaaaa";
+			$this->triplify_csv_file_name = $_FILES ["triplify-csv-file"] ["name"];
+			$fileType = pathinfo($this->triplify_csv_file_name,PATHINFO_EXTENSION);
+			if($fileType != "csv"){
+				$tdCerto = false;
+				return $tdCerto;
+				die();
+			}
+			move_uploaded_file($tmp_name, $this->triplify_get_upload_directory() . "/$this->triplify_csv_file_name");
+        
+			$tdCerto = true;
+		}
+		//echo "ccccccccccccccccccccccccccccc";
+		return $tdCerto;
+    }
+	/*$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+		$fileType = pathinfo($target_file,PATHINFO_EXTENSION);
+		if($fileType != "csv") break;*/
 }
 
 ?>
