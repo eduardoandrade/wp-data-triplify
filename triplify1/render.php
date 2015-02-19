@@ -39,6 +39,11 @@ class Render {
 				</form>
 				<form action="" method="POST" enctype="multipart/form-data"><!-- enctype="multipart/form-data" -->
 					<h3>Desejo fazer leitura de arquivo CSV com tipo e configurações lá contidas: </h3>
+					<h4>O arquivo deve estar da seguinte forma:</h4>
+					<h6>O delimitador deve ser ;(ponto e vírgula)</h6>
+					<h6>Na primeira linha, os tipos a serem aplicadas aquelas correspondências definidas</h6>
+					<h6>Na segunda linha, a URI_base de cada um dos tipos <red>respectivamente</red></h6>
+					<h6>O resto das linhas deve conter na ordem: <red>A coluna, sua correspondência e se o valor mostrado será uma URI ou não</red></h6>
 					<br/>
 					<div class="pure-control-group">
 						<label>Arquivo</label>
