@@ -32,7 +32,7 @@ class TYPE_TEXT {
 		$arrays = $this->getPrefixesUsedAndObjects($type, $posts, $array);//replacing keys for the ones the user defined for that type, and at the same time figuring out the prefixes from the columns
 		
 		$array_contendo_prefixos_usados = $arrays[0];
-		$prefixos = [1];
+		$prefixos = $arrays[1];
 		$option_URI_base = get_option("#triplificator_uri_base#".$type);
 		
 		//ver um jeito esperto de fazer isso, talvez switch (tem switch em php?), um for em um array?
