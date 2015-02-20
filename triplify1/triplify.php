@@ -90,8 +90,37 @@ function triplify(){
 		
 		$wpdb->query($sql);
 	}
+	
+	$table_name = "wp_triplify_prefixes";
+	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+		$sql = "CREATE TABLE $table_name (
+					prefixo VARCHAR(55) NOT NULL,
+					uri VARCHAR(100) NOT NULL,
+					UNIQUE KEY id (prefixo)
+				);";
+		
+		$wpdb->query($sql);
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'foaf', 'uri' => 'http://xmlns.com/foaf/0.1/' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'dc', 'uri' => 'http://purl.org/dc/elements/1.1' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'rdf', 'uri' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'rdfs', 'uri' => 'http://www.w3.org/2000/01/rdf-schema#' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'owl', 'uri' => 'http://www.w3.org/2002/07/owl#' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'xsd', 'uri' => 'http://www.w3.org/2001/XMLSchema#' ));
+	}
+	
+	$table_name = "wp_dc_prefix";
+	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name) {//se a tabela existe
+		
+		$prefixos_definidos_data_cube = $wpdb->get_results("SELECT * FROM $table_name");
+		foreach($prefixos_definidos_data_cube as $prefixo){
+			$ja_existente = $wpdb->get_row("SELECT * FROM  WHERE prefixo='".$prefixo->prefix."'", OBJECT);
+			if($ja_existente != null) {
+				$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => $prefixo->prefix, 'uri' => $prefixo->uri ));
+			}
+		}
+	}
 
-	$abc = new Render();
+	new Render();
 }
 
 add_action( 'wp_ajax_triplify_action', 'triplify_action_callback' );
