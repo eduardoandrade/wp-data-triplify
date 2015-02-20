@@ -3,7 +3,7 @@
 class ReadCSVFile {
 	
 	// @var string CSV upload directory name
-    	public $uploadDir = 'data-triplify';
+    public $uploadDir = 'data-triplify';
 	
 	// @var containing all types to triplify
 	public $types = null;
@@ -20,20 +20,16 @@ class ReadCSVFile {
 	
 	public $mensagemErro = null;
 	
-	function __construct($file) {
+	function __construct() {
 		
 		$retorno = $this->dc_move_file();
 		if($retorno == false) return $retorno;
 		
 		if($this->triflify_csv_header() == false || $this->triflify_csv_file_data_rows() == false){
 			$retorno = false;
-			return $retorno;
-			die();
 		}
 		else {
 			$retorno = true;
-			return $retorno;
-			die();
 		}
 	}
 	
@@ -58,26 +54,23 @@ class ReadCSVFile {
 						$this->mensagemErro = "A linha 1, com os posts_types está vazia.";
 						$tdCerto = false;
 						return $tdCerto;
-						die();
 					}
 					foreach($keys as $key){
 						if(trim($key) == ""){
 							$this->mensagemErro = "A linha 1, com os posts_types está vazia ou contém 2 ';' seguidos.";
 							$tdCerto = false;
 							return $tdCerto;
-							die();
 						}
 					}
 					
 				}else if($init == 1){
 					//print_r($keys);
 					$this->urls_bases = $keys;
-					echo count($keys).":";
+					//echo count($keys).":";
 					if(count($keys)<1){
 						$this->mensagemErro = "A linha 2, com os posts_types está vazia.";
 						$tdCerto = false;
 						return $tdCerto;
-						die();
 					}
 					
 					foreach($keys as $key){
@@ -85,7 +78,6 @@ class ReadCSVFile {
 							$this->mensagemErro = "A linha 2, com os posts_types possui 2 ';' seguidos.";
 							$tdCerto = false;
 							return $tdCerto;
-							die();
 						}
 					}
 					
@@ -117,7 +109,6 @@ class ReadCSVFile {
 		$this->mensagemErro = "Arquivo não foi upado corretamente, favor tentar novamente.";
 		$tdCerto = false;
 		return $tdCerto;
-		die();
 	}
 	
 	function triflify_csv_file_data_rows(){//$delim
@@ -141,12 +132,11 @@ class ReadCSVFile {
             $init = 0;
             while ($keys = fgetcsv($resource, '', ';', '"')) {//$this->delim
                 if ($init != 0 && $init != 1) {
-					if(count($keys != 3) && count($keys != 0)){
+					if(count($keys) != 3){
 						$linhaErro = $init + 1;
 						$this->mensagemErro = "A linha $linhaErro não está no formato correto.";
 						$tdCerto = false;
 						return $tdCerto;
-						die();
 					}
 					$explode = explode(':', $keys[1]);
 					$object = new prefixColumnUri();
@@ -175,7 +165,6 @@ class ReadCSVFile {
 			$this->mensagemErro = "Arquivo não foi upado corretamente, favor tentar novamente.";
 			$tdCerto = false;
 			return $tdCerto;
-			die();
 		} 
 	}
 	
@@ -217,7 +206,6 @@ class ReadCSVFile {
 				$this->mensagemErro = "Arquivo selecionado não possui formato .csv .";
 				$tdCerto = false;
 				return $tdCerto;
-				die();
 			}
 			move_uploaded_file($tmp_name, $this->triplify_get_upload_directory() . "/$this->triplify_csv_file_name");
         
