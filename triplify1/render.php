@@ -20,7 +20,7 @@ class Render {
 					<br/>
 						<?php 
 							global $wpdb;
-							$url = $url = get_bloginfo('url');
+							$url  = get_bloginfo('url');
 							$url_base = get_option("triplify_url_base_dados", "tri");
 							$posts = $wpdb->get_results("SELECT distinct tipo FROM {$wpdb->prefix}triplify_configurations");
 
@@ -51,6 +51,18 @@ class Render {
 						<button name="triplify-csv-file" type="submit" class="button-primary">Importar</button>
 					</div>
 				</form>
+				<h3>Prefixos já contidos no banco:</h3><?php
+					global $wpdb;
+					$prefixos = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}triplify_prefixes");
+
+					if(!empty($prefixos)){
+						foreach($prefixos as $prefixo){
+							echo "<code><a href=\"$prefixo->uri\">$prefixo->prefixo</a></code>";
+						}
+					} else {
+						echo "Nenhum tipo triplificado ainda.";
+					}?>
+
 			</div>
 	<?php
 		} else if(isset($_POST["postType"])){
