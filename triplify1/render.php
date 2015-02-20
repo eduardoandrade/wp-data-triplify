@@ -6,9 +6,9 @@ class Render {
 	
 	function __construct() {
 		
-	add_action( 'admin_footer', 'triplify_javascript' );
 		
-		if(!isset($_POST['termoPesquisado']) && !isset($_POST['triplify-csv-file'])){
+	add_action( 'admin_footer', 'triplify_javascript' );
+		if(!isset($_POST['termoPesquisado']) && !isset($_POST['triplify-csv-file']) && !isset($_POST['salvar_prefixos'])){
 			//print_r($_POST);
 	?>
 			<div>
@@ -62,7 +62,14 @@ class Render {
 					} else {
 						echo "Nenhum tipo triplificado ainda.";
 					}?>
-
+				<h3>Adicionar novos prefixos, caso queira adicionar um já existente, apenas sua URI será trocada no banco. Digite o prefixo sem ':'</h3>
+				<form action="" method="POST">
+					<div>
+						<input class="prefixo_salvar" name="prefixo_salvar" value="Prefixo" id="prefixoSalvar"/>
+						<input class="prefixo_salvar" name="uri_salvar" value="URI" id="uriSalvar"/>
+						<button name="salvar_prefixos" type="submit" class="button-primary">Salvar</button>
+					</div>
+				</form>
 			</div>
 	<?php
 		} else if(isset($_POST["postType"])){
@@ -143,14 +150,35 @@ class Render {
 				<button id="id" name="triplify" class="button-primary">Salvar opções</button>
 			</div><?php
 		} else if(isset($_POST['triplify-csv-file'])){
-			$objeto = new ReadCSVFile($_POST['triplify-csv-file']);
-			if(($objeto->retorno) == true) {
+			$objeto = new ReadCSVFile();
+			echo $objeto->retorno;
+			if($objeto->mensagemErro == null) {
 				?><div>
 					<h2>Opções salvas!</h2>
 				</div><?php
 			} else{
 				?><div>
 					<h2>Falha no upload do arquivo! <?php echo $objeto->mensagemErro?></h2>
+				</div><?php
+			}
+			
+		} else if(isset($_POST['salvar_prefixos'])){
+			
+			global $wpdb;
+			
+			$prefixo = $_POST['prefixo_salvar'];
+			$uri = $_POST['uri_salvar'];
+			$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_prefixes WHERE prefixo = \"$prefixo\" ", OBJECT);
+			
+			if($registro == null){
+				$wpdb->insert("wp_triplify_prefixes", array( 'prefixo' => $prefixo, 'uri' => $uri));
+				?><div>
+					<h2>Prefixo salvo!</h2>
+				</div><?php
+			} else {
+				$wpdb->update("$wp_triplify_prefixes", array( 'prefixo' => $prefixo, 'uri' => $uri), array('prefixo' => $prefixo));
+				?><div>
+					<h2>Prefixo atualizado!</h2>
 				</div><?php
 			}
 			
@@ -397,6 +425,11 @@ class Render {
 				});
 				$(".input_triplify").click(function(){
 					if($(this).val() == 'correspondencia'){
+						$(this).val('');
+					}
+				});
+				$(".prefixo_salvar").click(function(){
+					if($(this).val() == 'Prefixo' || $(this).val() == 'URI'){
 						$(this).val('');
 					}
 				});
