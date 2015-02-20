@@ -3,7 +3,7 @@
 class ReadCSVFile {
 	
 	// @var string CSV upload directory name
-    public $uploadDir = 'data-triplify';
+    	public $uploadDir = 'data-triplify';
 	
 	// @var containing all types to triplify
 	public $types = null;
@@ -142,7 +142,8 @@ class ReadCSVFile {
             while ($keys = fgetcsv($resource, '', ';', '"')) {//$this->delim
                 if ($init != 0 && $init != 1) {
 					if(count($keys != 3) && count($keys != 0)){
-						$this->mensagemErro = "A linha $init não está no formato correto.";
+						$linhaErro = $init + 1;
+						$this->mensagemErro = "A linha $linhaErro não está no formato correto.";
 						$tdCerto = false;
 						return $tdCerto;
 						die();
