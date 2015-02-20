@@ -6,17 +6,15 @@ require_once( "functions.php" );
 class TextXML {
 	
 	function __construct($option_URI_base, $array_contendo_objetos_usados, $prefixos, $posts) {
+		global $wpdb;
+		$prefixos_banco = $wpdb->get_results("SELECT * FROM wp_triplify_prefixes");
+		
 		echo htmlentities('<?xml version="1.0"?>');
 		echo htmlentities ("<posts>");
 		foreach($posts as $post){
 			$XML = "<post ";
-			foreach($prefixos as $prefixo){//always there will be at maximum one of each.
-				if(strcmp(getPrefix($prefixo), 'dc') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://purl.org/dc/elements/1.1\" ";
-				else if(strcmp(getPrefix($prefixo), 'foaf') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://xmlns.com/foaf/0.1/\" ";
-				else if(strcmp(getPrefix($prefixo), 'owl') == 0) $XML = $XML."xmlns:".$prefix."= \"http://www.w3.org/2002/07/owl#\" ";
-				else if(strcmp(getPrefix($prefixo), 'rdf') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" ";
-				else if(strcmp(getPrefix($prefixo), 'rdfs') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://www.w3.org/2000/01/rdf-schema#\" ";
-				else if(strcmp(getPrefix($prefixo), 'xsd') == 0) $XML = $XML."xmlns:".$prefixo."= \"http://www.w3.org/2001/XMLSchema#\" ";
+			foreach($prefixos_banco as $prefix){//always there will be at maximum one of each.
+				if(in_array(strtolower($prefix->prefixo), $prefixos)) $XML = $XML."xmlns:".$prefix->prefixo."= "."\"$prefix->uri\" ";
 			}
 			$XML = $XML.">";
 			$XML = $XML."<URI>";
