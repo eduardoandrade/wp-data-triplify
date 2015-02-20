@@ -6,17 +6,18 @@ require_once( "functions.php" );
 class TextRDF {
 	
 	function __construct($option_URI_base, $array_contendo_objetos_usados, $prefixos, $posts) {
+		
+		global $wpdb;
+		$prefixos_banco = $wpdb->get_results("SELECT * FROM wp_triplify_prefixes");
+		
 		$RDF = '<?xml version="1.0" encoding="UTF-8"?>';
 		$RDF = $RDF."<rdf:RDF ";
 		$RDF = $RDF."xmlns:rdf= \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" ";//every post have to have
 		
+		print_r($prefixos);
 		
-		foreach($prefixos as $prefix){//always there will be at maximum one of each.
-			if(strcmp(getPrefix($prefix), 'dc') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://purl.org/dc/elements/1.1\" ";
-			else if(strcmp(getPrefix($prefix), 'foaf') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://xmlns.com/foaf/0.1/\" ";
-			else if(strcmp(getPrefix($prefix), 'owl') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://www.w3.org/2002/07/owl#\" ";
-			else if(strcmp(getPrefix($prefix), 'rdfs') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://www.w3.org/2000/01/rdf-schema#\" ";
-			else if(strcmp(getPrefix($prefixo), 'xsd') == 0) $RDF = $RDF."xmlns:".$prefix."= \"http://www.w3.org/2001/XMLSchema#\" ";
+		foreach($prefixos_banco as $prefix){//always there will be at maximum one of each.
+			if(in_array(strtolower($prefix->prefixo), $prefixos) && $prefix->prefixo != "rdf") $RDF = $RDF."xmlns:".$prefix->prefixo."= "."\"$prefix->uri\" ";
 		}
 		$RDF = $RDF.">";
 		echo htmlentities($RDF);
