@@ -142,7 +142,11 @@ class ReadCSVFile {
 					$object = new prefixColumnUri();
 					$object->prefix = $explode[0];
 					$object->coluna = $explode[1];
-					$object->uri = $keys[2];
+					if($keys[2] == "true"){
+						$object->uri = 1;
+					} else {
+						$object->uri = 0;
+					}
 					$object->fullProperty = $keys[1];
 					
 					foreach($this->types as $type){
