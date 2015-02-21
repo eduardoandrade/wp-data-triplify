@@ -12,68 +12,84 @@ class Render {
 			//print_r($_POST);
 	?>
 			<div>
-				<form action="" method="POST">
-					<h3>Digite a URL que deseja acessar para verificar os dados triplificados:</h3>
-					<br/>
-						<code><?php bloginfo('url'); ?>/</code> <input name="url_base" value="<?php echo get_option("triplify_url_base_dados", "tri");?>" id="postType_base"/>
-					<h3>Post-types já triplificados:<h3>
-					<br/>
-						<?php 
-							global $wpdb;
-							$url  = get_bloginfo('url');
-							$url_base = get_option("triplify_url_base_dados", "tri");
-							$posts = $wpdb->get_results("SELECT distinct tipo FROM {$wpdb->prefix}triplify_configurations");
+				<div style="border-style: dotted; border-width: 1px;">
+					<form action="" method="POST">
+						<h3>Digite a URL que deseja acessar para verificar os dados triplificados:</h3>
+						<br/>
+							<code><?php bloginfo('url'); ?>/</code> <input name="url_base" value="<?php echo get_option("triplify_url_base_dados", "tri");?>" id="postType_base"/>
+						<h3>Post-types já triplificados:<h3>
+						<br/>
+							<?php 
+								global $wpdb;
+								$url  = get_bloginfo('url');
+								$url_base = get_option("triplify_url_base_dados", "tri");
+								$posts = $wpdb->get_results("SELECT distinct tipo FROM {$wpdb->prefix}triplify_configurations");
 
-							if(!empty($posts)){
-								foreach($posts as $tipo){
-									echo "<code><a href=\"$url\\$url_base\\$tipo->tipo\">$tipo->tipo</a></code>" ;
+								if(!empty($posts)){
+									foreach($posts as $tipo){
+										echo "<code><a href=\"$url\\$url_base\\$tipo->tipo\">$tipo->tipo</a></code>" ;
+									}
+								} else {
+									echo "Nenhum tipo triplificado ainda.";
 								}
-							} else {
-								echo "Nenhum tipo triplificado ainda.";
-							}
-						?>
-					<h3>Desejo pesquisar o post-type e configurá-lo manualmente para triplificar: </h3>
-					<br/>
-					<input name="postType" value="" id="postType"/>
-					<button name="termoPesquisado" type="submit" class="button-primary">Pesquisar</button>
-				</form>
-				<form action="" method="POST" enctype="multipart/form-data"><!-- enctype="multipart/form-data" -->
-					<h3>Desejo fazer leitura de arquivo CSV com tipo e configurações lá contidas: </h3>
-					<h4>O arquivo deve estar da seguinte forma:</h4>
-					<h6>O delimitador deve ser ;(ponto e vírgula)</h6>
-					<h6>Na primeira linha, os tipos a serem aplicadas aquelas correspondências definidas</h6>
-					<h6>Na segunda linha, a URI_base de cada um dos tipos <red>respectivamente</red></h6>
-					<h6>O resto das linhas deve conter na ordem: <red>A coluna, sua correspondência e se o valor mostrado será uma URI ou não</red></h6>
-					<br/>
-					<div class="pure-control-group">
-						<label>Arquivo</label>
-						<input id="triplify-file" name="triplify-csv-file" type="file" value="" data-validate="validate(required)" />
-						<button name="triplify-csv-file" type="submit" class="button-primary">Importar</button>
-					</div>
-				</form>
-				<h3>Prefixos já contidos no banco:</h3><?php
-					global $wpdb;
-					$prefixos = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}triplify_prefixes");
+							?>
+						<h3>Desejo pesquisar o post-type e configurá-lo manualmente para triplificar: </h3>
+						<br/>
+						<input name="postType" value="" id="postType"/>
+						<button name="termoPesquisado" type="submit" class="button-primary">Pesquisar</button>
+					</form>
+				</div>
+				<div style="border-style: dotted; border-width: 1px;">
+					<form action="" method="POST" enctype="multipart/form-data"><!-- enctype="multipart/form-data" -->
+						<h3>Desejo fazer leitura de arquivo CSV com tipo e configurações lá contidas: </h3>
+						<h4>O arquivo deve estar da seguinte forma:</h4>
+						<h6>O delimitador deve ser ;(ponto e vírgula)</h6>
+						<h6>Na primeira linha, os tipos a serem aplicadas aquelas correspondências definidas</h6>
+						<h6>Na segunda linha, a URI_base de cada um dos tipos <red>respectivamente</red></h6>
+						<h6>O resto das linhas deve conter na ordem: <red>A coluna, sua correspondência e se o valor mostrado será uma URI ou não</red></h6>
+						<br/>
+						<div class="pure-control-group">
+							<label>Arquivo</label>
+							<input id="triplify-file" name="triplify-csv-file" type="file" value="" data-validate="validate(required)" />
+							<button name="triplify-csv-file" type="submit" class="button-primary">Importar</button>
+						</div>
+					</form>
+				</div>
+				<div style="border-style: dotted; border-width: 1px;">
+					<h3>Prefixos já contidos no banco:</h3><?php
+						global $wpdb;
+						$prefixos = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}triplify_prefixes");
 
-					if(!empty($prefixos)){
-						foreach($prefixos as $prefixo){
-							echo "<code><a href=\"$prefixo->uri\">$prefixo->prefixo</a></code>";
-						}
-					} else {
-						echo "Nenhum tipo triplificado ainda.";
-					}?>
-				<h3>Adicionar novos prefixos, caso queira adicionar um já existente, apenas sua URI será trocada no banco. Digite o prefixo sem ':'</h3>
-				<form action="" method="POST">
-					<div>
-						<input class="prefixo_salvar" name="prefixo_salvar" value="Prefixo" id="prefixoSalvar"/>
-						<input class="prefixo_salvar" name="uri_salvar" value="URI" id="uriSalvar"/>
-						<button name="salvar_prefixos" type="submit" class="button-primary">Salvar</button>
-					</div>
-				</form>
+						if(!empty($prefixos)){
+							foreach($prefixos as $prefixo){
+								echo "<code><a href=\"$prefixo->uri\">$prefixo->prefixo</a></code>";
+							}
+						} else {
+							echo "Nenhum tipo triplificado ainda.";
+						}?>
+					<h3>Adicionar novos prefixos, caso queira adicionar um já existente, apenas sua URI será trocada no banco. Digite o prefixo sem ':'</h3>
+					<form action="" method="POST">
+						<div>
+							<input class="prefixo_salvar" name="prefixo_salvar" value="Prefixo" id="prefixoSalvar"/>
+							<input class="prefixo_salvar" name="uri_salvar" value="URI" id="uriSalvar"/>
+							<button name="salvar_prefixos" type="submit" class="button-primary">Salvar</button>
+						</div>
+					</form>
+				</div>
 			</div>
 	<?php
 		} else if(isset($_POST["postType"])){
 			$termo = $this->pegaValores($_POST["postType"]);
+			
+			global $wpdb;
+			$resultado = $wpdb->get_results("SELECT distinct meta_key FROM $wpdb->postmeta WHERE post_id in(SELECT ID FROM $wpdb->posts WHERE post_type = '".$termo."')");
+			if(empty($resultado)){
+				?><div>
+					Não foram encontrado post_types do tipo <?php if(trim($termo) == "")echo "vazio"; else echo $termo; ?>.
+				  </div><?php
+				  die();
+			}
+			
 			$this->salvaUrlBase($_POST["url_base"]);
 	?>
 			<div id="corpo">
@@ -91,10 +107,7 @@ class Render {
 				<h6>Selecionar o "não me interessa" ou deixar a correspondência com vazio ou "correspondencia" dá no mesmo.</h6>
 				<h6>O checkbox serve apenas para a página ficar mais limpa caso o usuário ache que esteja muito poluída.</h6>
 <?php
-				global $wpdb;
-				
-				$resultado = $wpdb->get_results("SELECT distinct meta_key FROM $wpdb->postmeta WHERE post_id in(SELECT ID FROM $wpdb->posts WHERE post_type = '".$termo."')");
-				
+
 				$correspondecias;
 				$contador = 1;
 				$post = $_POST["postType"];
