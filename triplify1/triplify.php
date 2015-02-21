@@ -13,21 +13,19 @@ include_once dirname( __FILE__ ) .'/TYPE_TEXT.php';
 require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 add_action('admin_init', 'flush_rewrite_rules');
-add_action('admin_menu', 'triplificator_admin_actions');
-add_action('generate_rewrite_rules', 'triplificator_add_rewrite_rules');
-add_action('template_redirect', 'my_page_template_redirect' );
-add_action('init', 'custom_rewrite_tag', 10, 0);
-add_action('init', 'configure_Data_Triplify', 10, 0);
 
+add_action('admin_menu', 'triplificator_admin_actions');
 function triplificator_admin_actions(){
 	add_options_page('Data-Triplify', 'Data-Triplify', 'manage_options', __FILE__, 'triplify');
 }
 
+add_action('init', 'custom_rewrite_tag', 10, 0);
 function custom_rewrite_tag() {
   add_rewrite_tag('%type%', '([^&]+)');
   add_rewrite_tag('%structure%', '([^&]+)');
 }
 
+add_action('init', 'configure_Data_Triplify', 10, 0);
 function configure_Data_Triplify(){
 	if ( ! defined( 'TRIPLIFY_PLUGIN_UPLOAD_PATH' ) ){
 		$upload_dir = wp_upload_dir();
@@ -36,6 +34,7 @@ function configure_Data_Triplify(){
 	}
 }
 
+add_action('generate_rewrite_rules', 'triplificator_add_rewrite_rules');
 function triplificator_add_rewrite_rules(){
 
 	global $wp_rewrite;
@@ -55,6 +54,7 @@ function triplificator_add_rewrite_rules(){
 	return $wp_rewrite->rules;
 }
 
+add_action('template_redirect', 'my_page_template_redirect' );
 function my_page_template_redirect(){
 	global $wp_query;
 
@@ -159,13 +159,4 @@ function triplify_action_callback() {
 	
 	wp_die();
 }
-
-//tentar colocar os scripts em um arquivo .js e "importar" ele aqui
-//add_action('admin_init', 'admin_load_scripts');
-//function admin_load_scripts() 
-//{
-	//$js_file = plugins_url( 'scripts.js', __FILE__ ); 
-	//wp_enqueue_script('admin-scripts', $js_file, array('jquery')); 
-//}
-
 /* EOF */
