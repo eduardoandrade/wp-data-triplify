@@ -43,10 +43,10 @@ class Render {
 					<form action="" method="POST" enctype="multipart/form-data"><!-- enctype="multipart/form-data" -->
 						<h3>Desejo fazer leitura de arquivo CSV com tipo e configurações lá contidas: </h3>
 						<h4>O arquivo deve estar da seguinte forma:</h4>
-						<h6>O delimitador deve ser ;(ponto e vírgula)</h6>
-						<h6>Na primeira linha, os tipos a serem aplicadas aquelas correspondências definidas</h6>
-						<h6>Na segunda linha, a URI_base de cada um dos tipos <red>respectivamente</red></h6>
-						<h6>O resto das linhas deve conter na ordem: <red>A coluna, sua correspondência e se o valor mostrado será uma URI ou não</red></h6>
+						<h6>O delimitador deve ser ;(ponto e vírgula)<br/>
+						Na primeira linha, os tipos a serem aplicadas aquelas correspondências definidas<br/>
+						Na segunda linha, a URI_base de cada um dos tipos <red>respectivamente</red><br/>
+						O resto das linhas deve conter na ordem: <red>A coluna, sua correspondência e se o valor mostrado será uma URI ou não</red></h6>
 						<br/>
 						<div class="pure-control-group">
 							<label>Arquivo</label>
@@ -102,10 +102,10 @@ class Render {
 				<br/>
 				
 				<h4>Defina as equivalências e marque o checkbox caso o resultado mostrado por essa coluna seja uma URI: </h4>
-				<h6>Marque a opção "não me interessa" caso o valor daquela correspondência não te importar.</h6>
-				<h6>Caso essa opção seja marcada a coluna não aparecerá nos dados triplificados.</h6>
-				<h6>Selecionar o "não me interessa" ou deixar a correspondência com vazio ou "correspondencia" dá no mesmo.</h6>
-				<h6>O checkbox serve apenas para a página ficar mais limpa caso o usuário ache que esteja muito poluída.</h6>
+				<h6>Marque a opção "não me interessa" caso o valor daquela correspondência não te importar.<br/>
+				Caso essa opção seja marcada a coluna não aparecerá nos dados triplificados.<br/>
+				Selecionar o "não me interessa" ou deixar a correspondência com vazio ou "correspondencia" dá no mesmo.<br/>
+				O checkbox serve apenas para a página ficar mais limpa caso o usuário ache que esteja muito poluída.</h6>
 <?php
 
 				$correspondecias;
@@ -391,6 +391,83 @@ class Render {
 					"foaf:sha1",
 					"foaf:thumbnail",
 					"foaf:logo",
+					"owl:AllDifferent",
+					"owl:AllDisjointClasses",
+					"owl:AllDisjointProperties",
+					"owl:Annotation",
+					"owl:AnnotationProperty",
+					"owl:AsymmetricProperty",
+					"owl:Axiom",
+					"owl:Class",
+					"owl:DataRange",
+					"owl:DatatypeProperty",
+					"owl:DeprecatedClass",
+					"owl:DeprecatedProperty",
+					"owl:FunctionalProperty",
+					"owl:InverseFunctionalProperty",
+					"owl:IrreflexiveProperty",
+					"owl:NamedIndividual",
+					"owl:NegativePropertyAssertion",
+					"owl:Nothing",
+					"owl:ObjectProperty",
+					"owl:Ontology",
+					"owl:OntologyProperty",
+					"owl:ReflexiveProperty",
+					"owl:Restriction",
+					"owl:SymmetricProperty",
+					"owl:TransitiveProperty",
+					"owl:Thing",
+					"owl:allValuesFrom",
+					"owl:annotatedProperty",
+					"owl:annotatedSource",
+					"owl:annotatedTarget",
+					"owl:assertionProperty",
+					"owl:backwardCompatibleWith",
+					"owl:bottomDataProperty",
+					"owl:bottomObjectProperty",
+					"owl:cardinality",
+					"owl:complementOf",
+					"owl:datatypeComplementOf",
+					"owl:deprecated",
+					"owl:differentFrom",
+					"owl:disjointUnionOf",
+					"owl:disjointWith",
+					"owl:distinctMembers",
+					"owl:equivalentClass",
+					"owl:equivalentProperty",
+					"owl:hasKey",
+					"owl:hasSelf",
+					"owl:hasValue",
+					"owl:imports",
+					"owl:incompatibleWith",
+					"owl:intersectionOf",
+					"owl:inverseOf",
+					"owl:maxCardinality",
+					"owl:maxQualifiedCardinality",
+					"owl:members",
+					"owl:minCardinality",
+					"owl:minQualifiedCardinality",
+					"owl:onClass",
+					"owl:onDataRange",
+					"owl:onDatatype",
+					"owl:oneOf",
+					"owl:onProperties",
+					"owl:onProperty",
+					"owl:priorVersion",
+					"owl:propertyChainAxiom",
+					"owl:propertyDisjointWith",
+					"owl:qualifiedCardinality",
+					"owl:sameAs",
+					"owl:someValuesFrom",
+					"owl:sourceIndividual",
+					"owl:targetIndividual",
+					"owl:targetValue",
+					"owl:topDataProperty",
+					"owl:topObjectProperty",
+					"owl:unionOf",
+					"owl:versionInfo",
+					"owl:versionIRI",
+					"owl:withRestrictions",
 					"rdf:HTML",
 					"rdf:langString",
 					"rdf:PlainLiteral",
