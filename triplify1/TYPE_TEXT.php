@@ -39,7 +39,8 @@ class TYPE_TEXT {
 		if(strcmp(strtolower($structure), 'json') == 0) new TextJSON($option_URI_base, $array_contendo_prefixos_usados, $posts); 
 		else if(strcmp(strtolower($structure), 'rdf') == 0) new TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
 		else if(strcmp(strtolower($structure), 'xml') == 0) new TextXML($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
-		else if(strcmp(strtolower($structure), 'turtle') == 0) new TextTURTLE($posts);
+		else if(strcmp(strtolower($structure), 'turtle') == 0) new TextTURTLE($posts);//https://semanticpublishing.wordpress.com/2013/03/01/lld2-rough-guide-to-turtle/
+		else if(strcmp(strtolower($structure), 'n-triples') == 0) new TextNTRIPLES($posts);//http://en.wikipedia.org/wiki/N-Triples
 		else echo "Unknown format.";
 		
 		//exit();
