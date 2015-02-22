@@ -5,7 +5,7 @@ include_once( 'functions.php' );
 
 class TextJSON {
 	
-	function __construct($option_URI_base, $array_contendo_prefixos_usados, $posts) {
+	function __construct($option_URI_base, $array_contendo_prefixos_usados, $prefixos, $posts) {
 		
 		global $wpdb;
 		$prefixos_banco = $wpdb->get_results("SELECT * FROM wp_triplify_prefixes");
@@ -27,9 +27,15 @@ class TextJSON {
 				}
 			}
 			
+			/*foreach(get_object_vars($post) as $key){
+				$post->$key = htmlentities(((array)$post->$key));
+				unset ($post->$key);
+				//print_r($post->$key);
+			}*/
+			
 			$compacted = jsonld_compact((object)$post, (object)$context);
-			echo json_encode($compacted, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-		}	
+			echo json_encode($compacted, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_HEX_QUOT | JSON_HEX_TAG);
+		}
 	}
 }
 
