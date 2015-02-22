@@ -39,8 +39,8 @@ class Render {
 						<button name="termoPesquisado" type="submit" class="button-primary">Pesquisar</button>
 					</form>
 				</div>
-				<div style="border-style: dotted; border-width: 1px; background-color: #f5f5dc; margin-top: 2px;">
-					<form action="" method="POST" enctype="multipart/form-data"><!-- enctype="multipart/form-data" -->
+				<div style="border-style: dotted; border-width: 1px; background-color: #d8f5da; margin-top: 2px;">
+					<form action="" method="POST" enctype="multipart/form-data">
 						<h3>Desejo fazer leitura de arquivo CSV com tipo e configurações lá contidas: </h3>
 						<h4>O arquivo deve estar da seguinte forma:</h4>
 						<h6>O delimitador deve ser ;(ponto e vírgula)<br/>
@@ -49,13 +49,12 @@ class Render {
 						O resto das linhas deve conter na ordem: <red>A coluna, sua correspondência e se o valor mostrado será uma URI ou não</red></h6>
 						<br/>
 						<div class="pure-control-group">
-							<label>Arquivo</label>
 							<input id="triplify-file" name="triplify-csv-file" type="file" value="" data-validate="validate(required)" />
 							<button name="triplify-csv-file" type="submit" class="button-primary">Importar</button>
 						</div>
 					</form>
 				</div>
-				<div style="border-style: dotted; border-width: 1px; background-color: #f5f5dc; margin-top: 2px;">
+				<div style="border-style: dotted; border-width: 1px; background-color: #f5e2df; margin-top: 2px;">
 					<h3>Prefixos já contidos no banco:</h3><?php
 						global $wpdb;
 						$prefixos = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}triplify_prefixes");
@@ -168,6 +167,7 @@ class Render {
 			if($objeto->mensagemErro == null) {
 				?><div>
 					<h2>Opções salvas!</h2>
+					Formatos suportados atualmente: JSON-LD, RDF e XML.
 				</div><?php
 			} else{
 				?><div>
@@ -198,7 +198,8 @@ class Render {
 		}?>
 		<div id="corpo2" style="display:none">
 			<h2>Opções salvas!</h2>
-			<h3>Acesse <code><?php bloginfo('url');?>/<?php echo get_option("triplify_url_base_dados", "tri")?>/<?php echo $termo; ?>/formato_desejado_dos_dados</code> para obter os dados. Caso o formato não seja especificado, o resultado será mostrado em JSON</h3>
+			<h3>Acesse <code><a href="<?php bloginfo('url'); echo '/'.get_option('triplify_url_base_dados', 'tri') .'/'; echo $termo;?>"><?php bloginfo('url');?>/<?php echo get_option("triplify_url_base_dados", "tri")?>/<?php echo $termo; ?></a></code> para obter os dados em formato JSON, caso queria os dados em outros formatos, basta adicionar /formato à URL para acessá-los.</h3>
+			Formatos suportados atualmente: JSON-LD, RDF e XML.
 		</div>
 		<?php
 	
