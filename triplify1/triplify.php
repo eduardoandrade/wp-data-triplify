@@ -101,11 +101,11 @@ function triplify(){
 		
 		$wpdb->query($sql);
 		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'foaf', 'uri' => 'http://xmlns.com/foaf/0.1/' ));
-		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'dc', 'uri' => 'http://purl.org/dc/elements/1.1' ));
-		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'rdf', 'uri' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#' ));
-		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'rdfs', 'uri' => 'http://www.w3.org/2000/01/rdf-schema#' ));
-		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'owl', 'uri' => 'http://www.w3.org/2002/07/owl#' ));
-		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'xsd', 'uri' => 'http://www.w3.org/2001/XMLSchema#' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'dc', 'uri' => 'http://purl.org/dc/elements/1.1/' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'rdf', 'uri' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#/' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'rdfs', 'uri' => 'http://www.w3.org/2000/01/rdf-schema#/' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'owl', 'uri' => 'http://www.w3.org/2002/07/owl#/' ));
+		$wpdb->insert('wp_triplify_prefixes', array( 'prefixo' => 'xsd', 'uri' => 'http://www.w3.org/2001/XMLSchema#/' ));
 	}
 	
 	$table_name = "wp_dc_prefix";
