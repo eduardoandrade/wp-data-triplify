@@ -12,7 +12,7 @@ class Render {
 			//print_r($_POST);
 	?>
 			<div>
-				<div style="border-style: dotted; border-width: 1px;">
+				<div style="border-style: dotted; border-width: 1px; background-color: #f5f5dc;">
 					<form action="" method="POST">
 						<h3>Digite a URL que deseja acessar para verificar os dados triplificados:</h3>
 						<br/>
@@ -39,7 +39,7 @@ class Render {
 						<button name="termoPesquisado" type="submit" class="button-primary">Pesquisar</button>
 					</form>
 				</div>
-				<div style="border-style: dotted; border-width: 1px;">
+				<div style="border-style: dotted; border-width: 1px; background-color: #f5f5dc; margin-top: 2px;">
 					<form action="" method="POST" enctype="multipart/form-data"><!-- enctype="multipart/form-data" -->
 						<h3>Desejo fazer leitura de arquivo CSV com tipo e configurações lá contidas: </h3>
 						<h4>O arquivo deve estar da seguinte forma:</h4>
@@ -55,7 +55,7 @@ class Render {
 						</div>
 					</form>
 				</div>
-				<div style="border-style: dotted; border-width: 1px;">
+				<div style="border-style: dotted; border-width: 1px; background-color: #f5f5dc; margin-top: 2px;">
 					<h3>Prefixos já contidos no banco:</h3><?php
 						global $wpdb;
 						$prefixos = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}triplify_prefixes");
