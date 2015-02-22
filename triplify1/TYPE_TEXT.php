@@ -40,6 +40,7 @@ class TYPE_TEXT {
 		else if(strcmp(strtolower($structure), 'rdf') == 0) new TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
 		else if(strcmp(strtolower($structure), 'xml') == 0) new TextXML($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
 		else if(strcmp(strtolower($structure), 'turtle') == 0) new TextTURTLE($posts);
+		else echo "Unknown format.";
 		
 		//exit();
 		return;
