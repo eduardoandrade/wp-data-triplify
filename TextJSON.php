@@ -5,7 +5,7 @@ include_once( 'functions.php' );
 
 class TextJSON {
 	
-	function __construct($option_URI_base, $array_contendo_prefixos_usados, $prefixos, $posts) {
+	function __construct($option_URI_base, $array_contendo_objetos_usados, $prefixos, $posts) {
 		
 		global $wpdb;
 		$prefixos_banco = $wpdb->get_results("SELECT * FROM wp_triplify_prefixes");
@@ -15,7 +15,7 @@ class TextJSON {
 		foreach($posts as $post){
 			$property = "rdf:about";
 			$post->$property = $option_URI_base.$post->ID;
-			foreach($array_contendo_prefixos_usados as $object){
+			foreach($array_contendo_objetos_usados as $object){
 				foreach($prefixos_banco as $prefixo){
 					if(strcmp(strtolower($object->prefix), strtolower($prefixo->prefixo)) == 0){
 						if($object->uri == 1){
@@ -27,15 +27,50 @@ class TextJSON {
 				}
 			}
 			
-			/*foreach(get_object_vars($post) as $key){
-				$post->$key = htmlentities(((array)$post->$key));
-				unset ($post->$key);
-				//print_r($post->$key);
-			}*/
+			$normalizado = new stdClass();;
+			foreach($post as $key => $value){
+				/*echo $post->$key;
+				echo " | ";
+				echo $value;*/
+				if(!empty($post->$key))
+				$normalizado->$key = htmlentities($value);
+			}
 			
-			$compacted = jsonld_compact((object)$post, (object)$context);
-			echo json_encode($compacted, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_HEX_QUOT | JSON_HEX_TAG);
+			$compacted = jsonld_compact((object)$normalizado, (object)$context);
+			//$pronto = utf8_encode($compacted);
+			//json_encode($pronto);
+			//print_r($compacted);
+			echo json_encode($compacted, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES  );// | JSON_HEX_QUOT | JSON_HEX_TAG
 		}
+		/*echo "{"; //global keys
+		
+		echo "\"@context\"	:{"; //context keys
+		echo "\"rdf\": { \"@id\": \"http://purl.org/dc/elements/1.1/dc\", \"@type\": \"@id\" }";//rdf:about
+		foreach($prefixos_banco as $prefix){//always there will be at maximum one of each.
+			if(in_array(strtolower($prefix->prefixo), $prefixos) && $prefix->prefixo != "rdf") {
+				echo ", \"".$prefix->prefixo."\":";
+				//echo $prefix->prefixo."= "."\"$prefix->uri\" ";
+				echo "{\"@id\":";
+				echo "\"".$prefix->uri."\"";
+				echo "}";
+			}
+		}
+		echo "},";// context keys
+		foreach($posts as $post){
+			//echo "{";
+			echo "\"rdf:about\":".$option_URI_base.$post->ID;
+			foreach($array_contendo_objetos_usados as $object){
+				$property = $object->fullProperty;
+				//if($object->uri == 0) echo "\"$property\"";
+				//else echo $property;
+				//echo "\"$post->$property\"";
+				echo " \"".$property."\":	";
+				if($object->uri == 0)echo "\"".$post->$property."\",";
+				else echo $post->$property.",";
+			}
+			//echo "}";
+		}
+		echo "}";// global keys*/
 	}
 }
 
