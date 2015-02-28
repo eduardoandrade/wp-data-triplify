@@ -27,20 +27,18 @@ class TextJSON {
 				}
 			}
 			
-			$normalizado = new stdClass();;
+			$normalizado = new stdClass();
 			foreach($post as $key => $value){
-				/*echo $post->$key;
-				echo " | ";
-				echo $value;*/
 				if(!empty($post->$key))
-				$normalizado->$key = htmlentities($value);
+				$string = htmlentities($value, ENT_XHTML);
+				$normalizado->$key = $string;
 			}
 			
 			$compacted = jsonld_compact((object)$normalizado, (object)$context);
-			//$pronto = utf8_encode($compacted);
-			//json_encode($pronto);
-			//print_r($compacted);
-			echo json_encode($compacted, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES  );// | JSON_HEX_QUOT | JSON_HEX_TAG
+			
+			$pronto = json_encode($compacted, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+			$pronto = str_replace('="', "", $pronto);
+			echo $pronto;
 		}
 		/*echo "{"; //global keys
 		
