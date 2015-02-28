@@ -14,8 +14,6 @@ class TextRDF {
 		$RDF = $RDF."<rdf:RDF ";
 		$RDF = $RDF."xmlns:rdf= \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" ";//every post have to have
 		
-		print_r($prefixos);
-		
 		foreach($prefixos_banco as $prefix){//always there will be at maximum one of each.
 			if(in_array(strtolower($prefix->prefixo), $prefixos) && $prefix->prefixo != "rdf") $RDF = $RDF."xmlns:".$prefix->prefixo."= "."\"$prefix->uri\" ";
 		}
