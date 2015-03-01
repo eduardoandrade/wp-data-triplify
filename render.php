@@ -35,7 +35,16 @@ class Render {
 							?>
 						<h3>Desejo pesquisar o post-type e configurá-lo manualmente para triplificar: </h3>
 						<br/>
-						<input name="postType" value="" id="postType"/>
+						<!--<input name="postType" value="" id="postType"/>-->
+						<?php 
+							global $wpdb;
+							$post_types = $wpdb->get_results("SELECT distinct post_type FROM {$wpdb->prefix}posts");
+							foreach($post_types as $type){
+								echo "<div>";
+								echo "<input type='checkbox' class='radio' value='$type->post_type' name='postType' />$type->post_type</label>";
+								echo "</div>";
+							}
+						?>
 						<button name="termoPesquisado" type="submit" class="button-primary">Pesquisar</button>
 					</form>
 				</div>
@@ -78,6 +87,7 @@ class Render {
 			</div>
 	<?php
 		} else if(isset($_POST["postType"])){
+			//$termo = $_POST["postType"][0];
 			$termo = $this->pegaValores($_POST["postType"]);
 			
 			global $wpdb;
@@ -101,10 +111,9 @@ class Render {
 				<br/>
 				
 				<h4>Defina as equivalências e marque o checkbox caso o resultado mostrado por essa coluna seja uma URI: </h4>
-				<h6>Marque a opção "não me interessa" caso o valor daquela correspondência não te importar.<br/>
-				Caso essa opção seja marcada a coluna não aparecerá nos dados triplificados.<br/>
-				Selecionar o "não me interessa" ou deixar a correspondência com vazio ou "correspondencia" dá no mesmo.<br/>
-				O checkbox serve apenas para a página ficar mais limpa caso o usuário ache que esteja muito poluída.</h6>
+				<h6>Marque a opção "não é importante" caso o valor daquela correspondência não for importante para o resultado final.<br/>
+				Caso esta opção seja marcada a coluna não aparecerá nos dados triplificados.<br/>
+				Selecionar o "não é importante" ou deixar a correspondência com vazio ou "correspondencia" tem igual valor.</h6>
 <?php
 
 				$correspondecias;
@@ -129,7 +138,7 @@ class Render {
 					$contador."- <input type='checkbox' id='uri".$contador."' ".$checked."/>".
 					$coluna." => ".
 					"<input class='input_triplify_posts' value='". $valor ."' id='correspondencia".$contador."' mk='".$coluna."' contador='".$contador."'/>".
-					"não me interessa". "<input class='checkbox_nao_interessa' type='checkbox' id='nao_me_interessa$contador'/>".
+					"não é importante". "<input class='checkbox_nao_interessa' type='checkbox' id='nao_me_interessa$contador'/>".
 					"</p></div>";
 					$contador++;
 				}
@@ -151,7 +160,7 @@ class Render {
 					$contador."- <input  type='checkbox' id='uri".$contador."' ".$checked."/>".
 					$resultadoX->meta_key." => ".
 					"<input class='input_triplify' value='". $valor ."' id='correspondencia".$contador."'  mk='".$resultadoX->meta_key."' contador='".$contador."'/>". 
-					"não me interessa". "<input class='checkbox_nao_interessa' type='checkbox' id='nao_me_interessa$contador'/>".
+					"não é importante". "<input class='checkbox_nao_interessa' type='checkbox' id='nao_me_interessa$contador'/>".
 					"</p></div>";
 					$contador++;
 				}
@@ -535,6 +544,21 @@ class Render {
 					
 					$(correspondenciaX).val("");
 					$(elementoEsconder).hide();
+				});
+				$("input:checkbox").on('click', function() {
+				  // in the handler, 'this' refers to the box clicked on
+				  var $box = $(this);
+				  if ($box.is(":checked")) {
+					// the name of the box is retrieved using the .attr() method
+					// as it is assumed and expected to be immutable
+					var group = "input:checkbox[name='" + $box.attr("name") + "']";
+					// the checked state of the group/box on the other hand will change
+					// and the current value is retrieved using .prop() method
+					$(group).prop("checked", false);
+					$box.prop("checked", true);
+				  } else {
+					$box.prop("checked", false);
+				  }
 				});
 			});
 			</script> <?php
