@@ -1,5 +1,8 @@
 === wp-data-triplify ===
 Contributors: Douglas Paranhos & Eduardo Andrade
+Requires at least: 3.0.1
+Tested up to: 3.4
+Stable tag: 1.0.0
 Tags: data, posts, triplify
 
 A plugin that triplifies your wordpress data.
