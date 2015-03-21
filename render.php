@@ -198,7 +198,7 @@ class Render {
 					<h2>Prefix saved!</h2>
 				</div><?php
 			} else {
-				$wpdb->update("$wp_triplify_prefixes", array( 'prefixo' => $prefixo, 'uri' => $uri), array('prefixo' => $prefixo));
+				$wpdb->update("wp_triplify_prefixes", array( 'prefixo' => $prefixo, 'uri' => $uri), array('prefixo' => $prefixo));
 				?><div>
 					<h2>Prefix updated!</h2>
 				</div><?php
