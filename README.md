@@ -1,12 +1,6 @@
 === wp-data-triplify ===
 Contributors: Douglas Paranhos & Eduardo Andrade
-Donate link: -
-Tags: posts, triplify
-Requires at least: 3.0.1
-Tested up to: 4.1
-Stable tag: -
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: data, posts, triplify
 
 A plugin that triplifies your wordpress data.
 
