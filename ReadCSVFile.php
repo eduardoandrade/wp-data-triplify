@@ -51,13 +51,13 @@ class ReadCSVFile {
 					//print_r($keys);
                     $this->types = $keys;
 					if(count($keys)<1){
-						$this->mensagemErro = "A linha 1, com os posts_types está vazia.";
+						$this->mensagemErro = "Line 1, with post-types is empty.";
 						$tdCerto = false;
 						return $tdCerto;
 					}
 					foreach($keys as $key){
 						if(trim($key) == ""){
-							$this->mensagemErro = "A linha 1, com os posts_types está vazia ou contém 2 ';' seguidos.";
+							$this->mensagemErro = "Line 1, with post-types is empty, or maybe it has two semicolons in a row.";
 							$tdCerto = false;
 							return $tdCerto;
 						}
@@ -68,14 +68,14 @@ class ReadCSVFile {
 					$this->urls_bases = $keys;
 					//echo count($keys).":";
 					if(count($keys)<1){
-						$this->mensagemErro = "A linha 2, com os posts_types está vazia.";
+						$this->mensagemErro = "Line 2, with each post-type's URI is empty.";
 						$tdCerto = false;
 						return $tdCerto;
 					}
 					
 					foreach($keys as $key){
 						if(trim($key) == ""){
-							$this->mensagemErro = "A linha 2, com os posts_types possui 2 ';' seguidos.";
+							$this->mensagemErro = "Line 2, with each post-type's URI is empty, or it has 2 semicolons in a row.";
 							$tdCerto = false;
 							return $tdCerto;
 						}
@@ -88,6 +88,7 @@ class ReadCSVFile {
 			//echo " ".count($this->types)."::".count($this->urls_bases);
 			if(count($this->types) != count($this->urls_bases)){
 				$this->mensagemErro = "O número de colunas dos post_types e de suas respoectivas URI_base, possuem número de elementos diferentes.";
+				$this->mensagemErro = "Numbers of post-types and URI's mismatch.";
 				$tdCerto = false;
 				return $tdCerto;
 			}
@@ -106,7 +107,7 @@ class ReadCSVFile {
             ini_set("auto_detect_line_endings", false);
 			return $tdCerto;
         }
-		$this->mensagemErro = "Arquivo não foi upado corretamente, favor tentar novamente.";
+		$this->mensagemErro = "Upload failed, please try again.";
 		$tdCerto = false;
 		return $tdCerto;
 	}
@@ -134,7 +135,7 @@ class ReadCSVFile {
                 if ($init != 0 && $init != 1) {
 					if(count($keys) != 3){
 						$linhaErro = $init + 1;
-						$this->mensagemErro = "A linha $linhaErro não está no formato correto.";
+						$this->mensagemErro = "Line $linhaErro has incorrect format.";
 						$tdCerto = false;
 						return $tdCerto;
 					}
@@ -166,7 +167,7 @@ class ReadCSVFile {
 			$tdCerto = true;
 			return $tdCerto;
         } else {
-			$this->mensagemErro = "Arquivo não foi upado corretamente, favor tentar novamente.";
+			$this->mensagemErro = "Upload failed, please try again.";
 			$tdCerto = false;
 			return $tdCerto;
 		} 
@@ -207,7 +208,7 @@ class ReadCSVFile {
 			$this->triplify_csv_file_name = $_FILES ["triplify-csv-file"] ["name"];
 			$fileType = pathinfo($this->triplify_csv_file_name,PATHINFO_EXTENSION);
 			if($fileType != "csv"){
-				$this->mensagemErro = "Arquivo selecionado não possui formato .csv .";
+				$this->mensagemErro = "Select file isn't a .csv file .";
 				$tdCerto = false;
 				return $tdCerto;
 			}
