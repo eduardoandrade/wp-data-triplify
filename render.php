@@ -14,10 +14,10 @@ class Render {
 			<div>
 				<div style="border-style: dotted; border-width: 1px; background-color: #f5f5dc;">
 					<form action="" method="POST">
-						<h3>Digite a URL que deseja acessar para verificar os dados triplificados:</h3>
+						<h3>Enter the URL basis of the triplified data:</h3>
 						<br/>
 							<code><?php bloginfo('url'); ?>/</code> <input name="url_base" value="<?php echo get_option("triplify_url_base_dados", "tri");?>" id="postType_base"/>
-						<h3>Post-types já triplificados:<h3>
+						<h3>Already triplified Post-types:<h3>
 						<br/>
 							<?php 
 								global $wpdb;
@@ -30,10 +30,10 @@ class Render {
 										echo "<code><a href=\"$url\\$url_base\\$tipo->tipo\">$tipo->tipo</a></code>" ;
 									}
 								} else {
-									echo "Nenhum tipo triplificado ainda.";
+									echo "No types triplified yet.";
 								}
 							?>
-						<h3>Desejo pesquisar o post-type e configurá-lo manualmente para triplificar: </h3>
+						<h3>Search a Post-type and manually triplify it: </h3>
 						<br/>
 						<!--<input name="postType" value="" id="postType"/>-->
 						<?php 
@@ -50,21 +50,21 @@ class Render {
 				</div>
 				<div style="border-style: dotted; border-width: 1px; background-color: #d8f5da; margin-top: 2px;">
 					<form action="" method="POST" enctype="multipart/form-data">
-						<h3>Desejo fazer leitura de arquivo CSV com tipo e configurações lá contidas: </h3>
-						<h4>O arquivo deve estar da seguinte forma:</h4>
-						<h6>O delimitador deve ser ;(ponto e vírgula)<br/>
-						Na primeira linha, os tipos a serem aplicadas aquelas correspondências definidas<br/>
-						Na segunda linha, a URI_base de cada um dos tipos <red>respectivamente</red><br/>
-						O resto das linhas deve conter na ordem: <red>A coluna, sua correspondência e se o valor mostrado será uma URI ou não</red></h6>
+						<h3>Upload a CSV file with the needed configurations to triplify: </h3>
+						<h4>The file must be like:</h4>
+						<h6>Must be semicolon separated (;)<br/>
+						First line must contain all the types that will be triplified<br/>
+						Second line must contain the URI basis respectively<br/>
+						All the following lines must have, in the following order: The column, it's intended correspondence and if the shown value is an URI or not</h6>
 						<br/>
 						<div class="pure-control-group">
 							<input id="triplify-file" name="triplify-csv-file" type="file" value="" data-validate="validate(required)" />
-							<button name="triplify-csv-file" type="submit" class="button-primary">Importar</button>
+							<button name="triplify-csv-file" type="submit" class="button-primary">Import</button>
 						</div>
 					</form>
 				</div>
 				<div style="border-style: dotted; border-width: 1px; background-color: #f5e2df; margin-top: 2px;">
-					<h3>Prefixos já contidos no banco:</h3><?php
+					<h3>Prefixes already in records:</h3><?php
 						global $wpdb;
 						$prefixos = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}triplify_prefixes");
 
@@ -73,14 +73,14 @@ class Render {
 								echo "<code><a href=\"$prefixo->uri\">$prefixo->prefixo</a></code>";
 							}
 						} else {
-							echo "Nenhum tipo triplificado ainda.";
+							echo "No prefixes in database.";
 						}?>
-					<h3>Adicionar novos prefixos, caso queira adicionar um já existente, apenas sua URI será trocada no banco. Digite o prefixo sem ':'</h3>
+					<h3>Add new prefixes. If the specified prefix already is on database, it's URI only will be updated. Type the prefix without colon ':'</h3>
 					<form action="" method="POST">
 						<div>
-							<input class="prefixo_salvar" name="prefixo_salvar" value="Prefixo" id="prefixoSalvar"/>
+							<input class="prefixo_salvar" name="prefixo_salvar" value="Prefix" id="prefixoSalvar"/>
 							<input class="prefixo_salvar" name="uri_salvar" value="URI" id="uriSalvar"/>
-							<button name="salvar_prefixos" type="submit" class="button-primary">Salvar</button>
+							<button name="salvar_prefixos" type="submit" class="button-primary">Save</button>
 						</div>
 					</form>
 				</div>
@@ -94,7 +94,7 @@ class Render {
 			$resultado = $wpdb->get_results("SELECT distinct meta_key FROM $wpdb->postmeta WHERE post_id in(SELECT ID FROM $wpdb->posts WHERE post_type = '".$termo."')");
 			if(empty($resultado)){
 				?><div>
-					Não foram encontrado post_types do tipo <?php if(trim($termo) == "")echo "vazio"; else echo $termo; ?>.
+					No Post-types found for the type <?php if(trim($termo) == "")echo "empty"; else echo $termo; ?>.
 				  </div><?php
 				  die();
 			}
@@ -102,18 +102,18 @@ class Render {
 			$this->salvaUrlBase($_POST["url_base"]);
 	?>
 			<div id="corpo">
-				<h2>Você está procurando por <?php echo $termo; ?></h2>
+				<h2>You are searching for <?php echo $termo; ?></h2>
 				
-				<h4> Defina a URI Base dos posts:</h4>
+				<h4> Type the URI basis of the posts:</h4>
 				<?php $uriBase = get_option("#triplificator_uri_base#".$_POST["postType"], 'URI base');
 				echo"<input name='uriBase' value='".$uriBase."'  id='uriBase'/>"
 				?>
 				<br/>
 				
-				<h4>Defina as equivalências e marque o checkbox caso o resultado mostrado por essa coluna seja uma URI: </h4>
-				<h6>Marque a opção "não é importante" caso o valor daquela correspondência não for importante para o resultado final.<br/>
-				Caso esta opção seja marcada a coluna não aparecerá nos dados triplificados.<br/>
+				<h4>Enter the correspondences and check the checkbox if the shown result of this column is an URI: </h4>
+				<h6>Check the option "not important" if it's correspondence isn't important, so it should not be shown in the final result<br/>
 				Selecionar o "não é importante" ou deixar a correspondência com vazio ou "correspondencia" tem igual valor.</h6>
+				Select "not important" or leave the correspondences with default values has the same results</h6>
 <?php
 
 				$correspondecias;
@@ -124,7 +124,7 @@ class Render {
 				foreach ( $wpdb->get_col( "DESC " . $tabela, 0 ) as $coluna ){
 					$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$post."' and coluna='".$coluna."'", OBJECT);
 					if($registro == null) {
-						$valor = 'correspondencia';
+						$valor = 'correspondence';
 						$checked = "";
 					}
 					else{
@@ -138,7 +138,7 @@ class Render {
 					$contador."- <input type='checkbox' id='uri".$contador."' ".$checked."/>".
 					$coluna." => ".
 					"<input class='input_triplify_posts' value='". $valor ."' id='correspondencia".$contador."' mk='".$coluna."' contador='".$contador."'/>".
-					"não é importante". "<input class='checkbox_nao_interessa' type='checkbox' id='nao_me_interessa$contador'/>".
+					"not important". "<input class='checkbox_nao_interessa' type='checkbox' id='nao_me_interessa$contador'/>".
 					"</p></div>";
 					$contador++;
 				}
@@ -147,7 +147,7 @@ class Render {
 				{
 					$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$post."' and coluna='".$resultadoX->meta_key."'", OBJECT);
 					if($registro == null){
-						$valor = 'correspondencia';
+						$valor = 'correspondence';
 						$checked = "";
 					}
 					else{
@@ -168,19 +168,19 @@ class Render {
 ?>
 				<input type='hidden' id='post_type' name='post_type' value="<?php echo $termo; ?>" />
 				<br/>
-				<button id="id" name="triplify" class="button-primary">Salvar opções</button>
+				<button id="id" name="triplify" class="button-primary">Save options</button>
 			</div><?php
 		} else if(isset($_POST['triplify-csv-file'])){
 			$objeto = new ReadCSVFile();
 			echo $objeto->retorno;
 			if($objeto->mensagemErro == null) {
 				?><div>
-					<h2>Opções salvas!</h2>
-					Formatos suportados atualmente: JSON-LD, RDF e XML.
+					<h2>Options saved!</h2>
+					Supported formats: JSON-LD, RDF and XML.
 				</div><?php
 			} else{
 				?><div>
-					<h2>Falha no upload do arquivo! <?php echo $objeto->mensagemErro?></h2>
+					<h2>Upload failed! <?php echo $objeto->mensagemErro?></h2>
 				</div><?php
 			}
 			
@@ -195,20 +195,20 @@ class Render {
 			if($registro == null){
 				$wpdb->insert("wp_triplify_prefixes", array( 'prefixo' => $prefixo, 'uri' => $uri));
 				?><div>
-					<h2>Prefixo salvo!</h2>
+					<h2>Prefix saved!</h2>
 				</div><?php
 			} else {
 				$wpdb->update("$wp_triplify_prefixes", array( 'prefixo' => $prefixo, 'uri' => $uri), array('prefixo' => $prefixo));
 				?><div>
-					<h2>Prefixo atualizado!</h2>
+					<h2>Prefix updated!</h2>
 				</div><?php
 			}
 			
 		}?>
 		<div id="corpo2" style="display:none">
-			<h2>Opções salvas!</h2>
-			<h3>Acesse <code><a href="<?php bloginfo('url'); echo '/'.get_option('triplify_url_base_dados', 'tri') .'/'; echo $termo;?>"><?php bloginfo('url');?>/<?php echo get_option("triplify_url_base_dados", "tri")?>/<?php echo $termo; ?></a></code> para obter os dados em formato JSON, caso queria os dados em outros formatos, basta adicionar /formato à URL para acessá-los.</h3>
-			Formatos suportados atualmente: JSON-LD, RDF e XML.
+			<h2>Options saved!</h2>
+			<h3>Access <code><a href="<?php bloginfo('url'); echo '/'.get_option('triplify_url_base_dados', 'tri') .'/'; echo $termo;?>"><?php bloginfo('url');?>/<?php echo get_option("triplify_url_base_dados", "tri")?>/<?php echo $termo; ?></a></code> to get data in JSON-LD format, if the desired format is another one, just add at the URL's end /format.</h3>
+			Supported formats: JSON-LD, RDF and XML.
 		</div>
 		<?php
 	
@@ -225,7 +225,7 @@ class Render {
 						var v	= $(this).val();
 						var contadorX = $(this).attr('contador').toString();
 			
-						if($.trim(v) != 'correspondencia' &&  $.trim(v) != ''){
+						if($.trim(v) != 'correspondence' &&  $.trim(v) != ''){
 							var post_triplify = new Object();
 							
 							post_triplify.coluna = mk;
@@ -248,7 +248,7 @@ class Render {
 						var v	= $(this).val();
 						var contadorX = $(this).attr('contador').toString();
 			
-						if($.trim(v) != 'correspondencia' &&  $.trim(v) != ''){
+						if($.trim(v) != 'correspondence' &&  $.trim(v) != ''){
 							
 							var post_triplify = new Object();
 							
@@ -519,17 +519,17 @@ class Render {
 				  source: availableTags
 				});
 				$(".input_triplify_posts").click(function(){
-					if($(this).val() == 'correspondencia'){
+					if($(this).val() == 'correspondence'){
 						$(this).val('');
 					}
 				});
 				$(".input_triplify").click(function(){
-					if($(this).val() == 'correspondencia'){
+					if($(this).val() == 'correspondence'){
 						$(this).val('');
 					}
 				});
 				$(".prefixo_salvar").click(function(){
-					if($(this).val() == 'Prefixo' || $(this).val() == 'URI'){
+					if($(this).val() == 'Prefix' || $(this).val() == 'URI'){
 						$(this).val('');
 					}
 				});
@@ -546,14 +546,9 @@ class Render {
 					$(elementoEsconder).hide();
 				});
 				$("input:checkbox").on('click', function() {
-				  // in the handler, 'this' refers to the box clicked on
 				  var $box = $(this);
 				  if ($box.is(":checked")) {
-					// the name of the box is retrieved using the .attr() method
-					// as it is assumed and expected to be immutable
 					var group = "input:checkbox[name='" + $box.attr("name") + "']";
-					// the checked state of the group/box on the other hand will change
-					// and the current value is retrieved using .prop() method
 					$(group).prop("checked", false);
 					$box.prop("checked", true);
 				  } else {
