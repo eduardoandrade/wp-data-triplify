@@ -14,7 +14,7 @@ class Render {
 			<div>
 				<div style="border-style: dotted; border-width: 1px; background-color: #f5f5dc;">
 					<form action="" method="POST">
-						<h3>Enter the URL basis of the triplified data:</h3>
+						<h3>Enter the triplified data's URL basis:</h3>
 						<br/>
 							<code><?php bloginfo('url'); ?>/</code> <input name="url_base" value="<?php echo get_option("triplify_url_base_dados", "tri");?>" id="postType_base"/>
 						<h3>Already triplified Post-types:<h3>
@@ -49,7 +49,7 @@ class Render {
 					</form>
 				</div>
 				<div style="border-style: dotted; border-width: 1px; background-color: #d8f5da; margin-top: 2px;">
-					<form action="" method="POST" enctype="multipart/form-data">
+					<form action="" method="POST" enctype="multipart/form-data" lang="en">
 						<h3>Upload a CSV file with the needed configurations to triplify: </h3>
 						<h4>The file must be like:</h4>
 						<h6>Must be semicolon separated (;)<br/>
