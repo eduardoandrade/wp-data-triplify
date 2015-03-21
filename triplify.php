@@ -4,8 +4,8 @@
 Plugin Name: Data-Triplify JSON
 Description: Triplify your wordpress posts
 Author: Douglas Paranhos & Eduardo Andrade
-Version: 0.1
-Author URI: http://dontpad.com/lalala
+Version: 1.0.0
+Author URI: https://br.linkedin.com/pub/douglas-paranhos/54/87a/929
 */
 
 include_once dirname( __FILE__ ) .'/render.php';
