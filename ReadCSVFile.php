@@ -22,7 +22,7 @@ class ReadCSVFile {
 	
 	function __construct() {
 		
-		$retorno = $this->dc_move_file();
+		$retorno = $this->triplify_move_file();
 		if($retorno == false) return $retorno;
 		
 		if($this->triflify_csv_header() == false || $this->triflify_csv_file_data_rows() == false){
@@ -140,7 +140,7 @@ class ReadCSVFile {
 						return $tdCerto;
 					}
 					$explode = explode(':', $keys[1]);
-					$object = new prefixColumnUri();
+					$object = new triplify_prefixColumnUri();
 					$object->prefix = $explode[0];
 					$object->coluna = $explode[1];
 					if($keys[2] == "true"){
@@ -200,7 +200,7 @@ class ReadCSVFile {
         }
     }
 	
-	function dc_move_file(){
+	function triplify_move_file(){
         $tdCerto = false;
 		if ($_FILES ["triplify-csv-file"] ["error"] == 0) {
 
