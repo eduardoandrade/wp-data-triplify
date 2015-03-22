@@ -6,7 +6,6 @@ class Render {
 	
 	function __construct() {
 		
-		
 	add_action( 'admin_footer', 'triplify_javascript' );
 		if(!isset($_POST['termoPesquisado']) && !isset($_POST['triplify-csv-file']) && !isset($_POST['salvar_prefixos'])){
 			//print_r($_POST);
@@ -88,7 +87,8 @@ class Render {
 	<?php
 		} else if(isset($_POST["postType"])){
 			//$termo = $_POST["postType"][0];
-			$termo = $this->pegaValores($_POST["postType"]);
+			//$termo = $this->pegaValores($_POST["postType"]);
+			$termo = sanitize_text_field($_POST["postType"]);
 			
 			global $wpdb;
 			$resultado = $wpdb->get_results("SELECT distinct meta_key FROM $wpdb->postmeta WHERE post_id in(SELECT ID FROM $wpdb->posts WHERE post_type = '".$termo."')");
@@ -99,7 +99,8 @@ class Render {
 				  die();
 			}
 			
-			$this->salvaUrlBase($_POST["url_base"]);
+			$variavel = sanitize_text_field($_POST["url_base"]);
+			$this->salvaUrlBase($variavel);
 	?>
 			<div id="corpo">
 				<h2>You are searching for <?php echo $termo; ?></h2>
@@ -188,8 +189,8 @@ class Render {
 			
 			global $wpdb;
 			
-			$prefixo = $_POST['prefixo_salvar'];
-			$uri = $_POST['uri_salvar'];
+			$prefixo = sanitize_text_field($_POST['prefixo_salvar']);
+			$uri = sanitize_text_field($_POST['uri_salvar']);
 			$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_prefixes WHERE prefixo = \"$prefixo\" ", OBJECT);
 			
 			if($registro == null){
@@ -568,12 +569,12 @@ class Render {
 		else update_option("triplify_url_base_dados", $option);
 	}
 	
-	function pegaValores($data) {
+	/*function pegaValores($data) {
 		$data = trim($data);
 		$data = stripslashes($data);
 		$data = htmlspecialchars($data);
 		$data = strtolower($data);
 		return $data;
-	}
+	}*/
 }
  ?>
