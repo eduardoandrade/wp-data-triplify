@@ -9,12 +9,12 @@ include_once("prefixColumnUri.php");
 class TYPE_TEXT {
 	
 	function __construct($type, $structure){
-		add_action( 'show_data_hook', array( $this, 'show_data' ), 10, 2);
-		do_action('show_data_hook', $type, $structure);
+		add_action( 'dt_show_data_hook', array( $this, 'dt_show_data' ), 10, 2);
+		do_action('dt_show_data_hook', $type, $structure);
 			
 	}
 	
-	function show_data($type, $structure){
+	function dt_show_data($type, $structure){
 
 		$posts_array = array( 'posts_per_page' => 1000, 'post_type' => $type );
 		$posts = get_posts($posts_array);
@@ -24,7 +24,7 @@ class TYPE_TEXT {
 			exit();
 		}
 		
-		$array = $this->getConfigurationsPreviouslySaved($type);//get configurations previously saved.
+		$array = $this->dt_getConfigurationsPreviouslySaved($type);//get configurations previously saved.
 		if(empty($array)){
 			echo "This post_type exists but has not been triplified yet.";
 			return;
@@ -36,7 +36,7 @@ class TYPE_TEXT {
 		$option_URI_base = get_option("#triplificator_uri_base#".$type);
 		
 		//ver um jeito esperto de fazer isso, talvez switch (tem switch em php?), um for em um array?
-		if(strcmp(strtolower($structure), 'json') == 0) new TextJSON($option_URI_base, $array_contendo_prefixos_usados, $posts); 
+		if(strcmp(strtolower($structure), 'json') == 0) new TextJSON($option_URI_base, $array_contendo_prefixos_usados, $prefixos, $posts); 
 		else if(strcmp(strtolower($structure), 'rdf') == 0) new TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
 		else if(strcmp(strtolower($structure), 'xml') == 0) new TextXML($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
 		else if(strcmp(strtolower($structure), 'turtle') == 0) new TextTURTLE($posts);//https://semanticpublishing.wordpress.com/2013/03/01/lld2-rough-guide-to-turtle/
@@ -47,7 +47,7 @@ class TYPE_TEXT {
 		return;
 	}
 	
-	function getConfigurationsPreviouslySaved($type){
+	function dt_getConfigurationsPreviouslySaved($type){
 		
 		$array = array();
 		global $wpdb;
@@ -84,7 +84,7 @@ class TYPE_TEXT {
 						}
 						
 						$uri = $wpdb->get_row("SELECT uri FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$type."' and coluna='".$valores[0]."'", OBJECT);//see if this is a URI column or not
-						$object = new prefixColumnUri();
+						$object = new triplify_prefixColumnUri();
 						$object->prefix = $explode[0];
 						$object->coluna = $explode[1];
 						$object->uri = $uri->uri;
