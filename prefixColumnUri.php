@@ -1,15 +1,10 @@
 <?php
-	class prefixColumnUri{
+	class triplify_prefixColumnUri{
 		
 		public $prefix = null;
 		public $column = null;
 		public $uri = null;
-		
-		/*function __construct($a, $b, $c){
-			$this -> $prefix = $a;
-			$this -> $column = $b;
-			$this -> $uri = $c;
-		}*/
+		public $fullProperty = null;
 
 	}
 ?>
