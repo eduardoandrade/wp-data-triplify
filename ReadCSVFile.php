@@ -1,6 +1,6 @@
 <?php
 
-class ReadCSVFile {
+class dt_ReadCSVFile {
 	
 	// @var string CSV upload directory name
     public $uploadDir = 'data-triplify';
@@ -14,7 +14,7 @@ class ReadCSVFile {
 	// @var correspondences of the triplify
 	public $correspondencias = null;
 	
-	public $triplify_csv_file_name = null;
+	public $dt_csv_file_name = null;
 	
 	public $retorno = null;
 	
@@ -22,10 +22,10 @@ class ReadCSVFile {
 	
 	function __construct() {
 		
-		$retorno = $this->triplify_move_file();
+		$retorno = $this->dt_move_file();
 		if($retorno == false) return $retorno;
 		
-		if($this->triflify_csv_header() == false || $this->triflify_csv_file_data_rows() == false){
+		if($this->dt_csv_header() == false || $this->dt_csv_file_data_rows() == false){
 			$retorno = false;
 		}
 		else {
@@ -33,12 +33,12 @@ class ReadCSVFile {
 		}
 	}
 	
-	function triflify_csv_header(){
+	function dt_csv_header(){
 		$tdCerto = true;
-		$this->triplify_check_upload_dir_permission();
+		$this->dt_check_upload_dir_permission();
 		ini_set("auto_detect_line_endings", true);
 		
-		$file = $this->triplify_get_upload_directory() . "/$this->triplify_csv_file_name";
+		$file = $this->dt_get_upload_directory() . "/$this->dt_csv_file_name";
 		//echo $file;
 		// Check whether file is present in the given file location
         $fileexists = file_exists($file);
@@ -112,16 +112,16 @@ class ReadCSVFile {
 		return $tdCerto;
 	}
 	
-	function triflify_csv_file_data_rows(){//$delim
+	function dt_csv_file_data_rows(){//$delim
 		$tdCerto = true;
 		
-		$this->triplify_check_upload_dir_permission();
+		$this->dt_check_upload_dir_permission();
 		ini_set("auto_detect_line_endings", true);
 		
 		//$data_rows = array();
 		global $wpdb;
 		
-		$file = $this->triplify_get_upload_directory() . "/$this->triplify_csv_file_name";
+		$file = $this->dt_get_upload_directory() . "/$this->dt_csv_file_name";
 		# Check whether file is present in the given file location
         $fileexists = file_exists($file);
 		
@@ -140,7 +140,7 @@ class ReadCSVFile {
 						return $tdCerto;
 					}
 					$explode = explode(':', $keys[1]);
-					$object = new triplify_prefixColumnUri();
+					$object = new dt_prefixColumnUri();
 					$object->prefix = $explode[0];
 					$object->coluna = $explode[1];
 					if($keys[2] == "true"){
@@ -173,14 +173,14 @@ class ReadCSVFile {
 		} 
 	}
 	
-    function triplify_get_upload_directory(){
+    function dt_get_upload_directory(){
         $upload_dir = wp_upload_dir();
 		//print_r($upload_dir);
         return $upload_dir ['basedir'] . "/" . $this->uploadDir;
     }
 	
-	function triplify_check_upload_dir_permission(){
-        $this->triplify_get_upload_directory();
+	function dt_check_upload_dir_permission(){
+        $this->dt_get_upload_directory();
         $upload_dir = wp_upload_dir();
 		
 		//print_r ($upload_dir);
@@ -194,25 +194,25 @@ class ReadCSVFile {
 			</div>";
             $this->freeze();
         } else {
-            if (!is_dir($this->triplify_get_upload_directory())) {
-                wp_mkdir_p($this->triplify_get_upload_directory());
+            if (!is_dir($this->dt_get_upload_directory())) {
+                wp_mkdir_p($this->dt_get_upload_directory());
             }
         }
     }
 	
-	function triplify_move_file(){
+	function dt_move_file(){
         $tdCerto = false;
 		if ($_FILES ["triplify-csv-file"] ["error"] == 0) {
 
             $tmp_name = $_FILES ["triplify-csv-file"] ["tmp_name"];
-			$this->triplify_csv_file_name = $_FILES ["triplify-csv-file"] ["name"];
-			$fileType = pathinfo($this->triplify_csv_file_name,PATHINFO_EXTENSION);
+			$this->dt_csv_file_name = $_FILES ["triplify-csv-file"] ["name"];
+			$fileType = pathinfo($this->dt_csv_file_name,PATHINFO_EXTENSION);
 			if($fileType != "csv"){
 				$this->mensagemErro = "Select file isn't a .csv file .";
 				$tdCerto = false;
 				return $tdCerto;
 			}
-			move_uploaded_file($tmp_name, $this->triplify_get_upload_directory() . "/$this->triplify_csv_file_name");
+			move_uploaded_file($tmp_name, $this->dt_get_upload_directory() . "/$this->dt_csv_file_name");
         
 			$tdCerto = true;
 		}
