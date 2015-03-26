@@ -3,7 +3,7 @@
 include_once( "arc2/ARC2.php" );
 require_once( "functions.php" );
 
-class TextTURTLE {
+class dt_TextTURTLE {
 	
 	function __construct($posts) {
 		
