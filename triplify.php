@@ -14,8 +14,8 @@ require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 add_action('admin_init', 'flush_rewrite_rules');
 
-add_action('admin_menu', 'triplify_admin_actions');
-function triplify_admin_actions(){
+add_action('admin_menu', 'dt_admin_actions');
+function dt_admin_actions(){
 	add_options_page('Data-Triplify', 'Data-Triplify', 'manage_options', __FILE__, 'triplify');
 }
 
@@ -25,8 +25,8 @@ function dt_rewrite_tag() {
   add_rewrite_tag('%structure%', '([^&]+)');
 }
 
-add_action('init', 'triplify_configure_Data_Triplify', 10, 0);
-function triplify_configure_Data_Triplify(){
+add_action('init', 'dt_configure_Data_Triplify', 10, 0);
+function dt_configure_Data_Triplify(){
 	if ( ! defined( 'TRIPLIFY_PLUGIN_UPLOAD_PATH' ) ){
 		$upload_dir = wp_upload_dir();
 
@@ -40,7 +40,7 @@ function triplify_add_rewrite_rules(){
 	global $wp_rewrite;
 	
 	$url_base = get_option("triplify_url_base_dados", "tri");
-
+	
 	$keytag = '%type%';
 	$keytag2 = '%structure%';
 	
@@ -68,7 +68,7 @@ function triplify_template_redirect(){
 		}
 		
 		//chamar método que salva opções no banco
-		new TYPE_TEXT( $type, $structure );
+		new dt_TYPE_TEXT( $type, $structure );
 		exit();
 	}
 
@@ -120,7 +120,7 @@ function triplify(){
 		}
 	}
 
-	new Render();
+	new dt_Render();
 }
 
 add_action( 'wp_ajax_triplify_action', 'triplify_action_callback' );
