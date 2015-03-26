@@ -19,7 +19,7 @@ function dt_format_property($property)
 	return  $result;
 }
 
-function getPrefix($Str){
+function dt_getPrefix($Str){
 	if(strcmp($Str, 'dc') == 0) return "dc";
 	else if(strcmp(strtolower($Str), 'foaf') == 0) return "foaf";
 	else if(strcmp(strtolower($Str), 'owl') == 0) return "owl";
