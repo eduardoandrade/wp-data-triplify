@@ -3,7 +3,7 @@
 include_once( "arc2/ARC2.php" );
 require_once( "functions.php" );
 
-class TextXML {
+class dt_TextXML {
 	
 	function __construct($option_URI_base, $array_contendo_objetos_usados, $prefixos, $posts) {
 		global $wpdb;
