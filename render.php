@@ -2,11 +2,11 @@
 
 include_once('ReadCSVFile.php');
 
-class Render {
+class dt_Render {
 	
 	function __construct() {
 		
-	add_action( 'admin_footer', 'triplify_javascript' );
+	add_action( 'admin_footer', 'dt_javascript' );
 		if(!isset($_POST['termoPesquisado']) && !isset($_POST['triplify-csv-file']) && !isset($_POST['salvar_prefixos'])){
 			//print_r($_POST);
 	?>
@@ -44,7 +44,7 @@ class Render {
 								echo "</div>";
 							}
 						?>
-						<button name="termoPesquisado" type="submit" class="button-primary">Pesquisar</button>
+						<button name="termoPesquisado" type="submit" class="button-primary">Browse</button>
 					</form>
 				</div>
 				<div style="border-style: dotted; border-width: 1px; background-color: #d8f5da; margin-top: 2px;">
@@ -100,30 +100,28 @@ class Render {
 			}
 			
 			$variavel = sanitize_text_field($_POST["url_base"]);
-			$this->salvaUrlBase($variavel);
+			$this->dt_salvaUrlBase($variavel);
 	?>
 			<div id="corpo">
 				<h2>You are searching for <?php echo $termo; ?></h2>
 				
 				<h4> Type the URI basis of the posts:</h4>
-				<?php $uriBase = get_option("#triplificator_uri_base#".$_POST["postType"], 'URI base');
+				<?php $uriBase = get_option("#triplificator_uri_base#".$termo, 'URI base');
 				echo"<input name='uriBase' value='".$uriBase."'  id='uriBase'/>"
 				?>
 				<br/>
 				
 				<h4>Enter the correspondences and check the checkbox if the shown result of this column is an URI: </h4>
 				<h6>Check the option "not important" if it's correspondence isn't important, so it should not be shown in the final result<br/>
-				Selecionar o "não é importante" ou deixar a correspondência com vazio ou "correspondencia" tem igual valor.</h6>
 				Select "not important" or leave the correspondences with default values has the same results</h6>
 <?php
 
 				$correspondecias;
 				$contador = 1;
-				$post = $_POST["postType"];
 					
 				$tabela = $wpdb->prefix . 'posts';
 				foreach ( $wpdb->get_col( "DESC " . $tabela, 0 ) as $coluna ){
-					$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$post."' and coluna='".$coluna."'", OBJECT);
+					$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$termo."' and coluna='".$coluna."'", OBJECT);
 					if($registro == null) {
 						$valor = 'correspondence';
 						$checked = "";
@@ -146,7 +144,7 @@ class Render {
 				
 				foreach($resultado as $resultadoX)
 				{
-					$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$post."' and coluna='".$resultadoX->meta_key."'", OBJECT);
+					$registro = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$termo."' and coluna='".$resultadoX->meta_key."'", OBJECT);
 					if($registro == null){
 						$valor = 'correspondence';
 						$checked = "";
@@ -172,7 +170,7 @@ class Render {
 				<button id="id" name="triplify" class="button-primary">Save options</button>
 			</div><?php
 		} else if(isset($_POST['triplify-csv-file'])){
-			$objeto = new ReadCSVFile();
+			$objeto = new dt_ReadCSVFile();
 			echo $objeto->retorno;
 			if($objeto->mensagemErro == null) {
 				?><div>
@@ -213,7 +211,7 @@ class Render {
 		</div>
 		<?php
 	
-		function triplify_javascript() { ?>
+		function dt_javascript() { ?>
 			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 			<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
 			<script type="text/javascript">
@@ -562,19 +560,12 @@ class Render {
 	
 	}
 	
-	function salvaUrlBase($option){
+	function dt_salvaUrlBase($option){
 		$option_saved = get_option("triplify_url_base_dados", null);
 		if($option_saved == null) add_option("triplify_url_base_dados", $option);
 		else if(strcmp(strtolower($option_saved), strtolower($option)) == 0) return;
 		else update_option("triplify_url_base_dados", $option);
 	}
 	
-	/*function pegaValores($data) {
-		$data = trim($data);
-		$data = stripslashes($data);
-		$data = htmlspecialchars($data);
-		$data = strtolower($data);
-		return $data;
-	}*/
 }
  ?>
