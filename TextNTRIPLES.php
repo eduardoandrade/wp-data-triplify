@@ -3,7 +3,7 @@
 include_once( "arc2/ARC2.php" );
 require_once( "functions.php" );
 
-class TextNTRIPLES {
+class dt_TextNTRIPLES {
 	
 	function __construct($posts) {
 			
