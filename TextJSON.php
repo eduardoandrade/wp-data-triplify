@@ -3,7 +3,7 @@
 include_once( 'jsonld/jsonld.php' );
 include_once( 'functions.php' );
 
-class TextJSON {
+class dt_TextJSON {
 	
 	function __construct($option_URI_base, $array_contendo_objetos_usados, $prefixos, $posts) {
 		
