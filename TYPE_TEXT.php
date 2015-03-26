@@ -6,7 +6,7 @@ include_once("TextXML.php");
 include_once("TextTURTLE.php");
 include_once("prefixColumnUri.php");
 
-class TYPE_TEXT {
+class dt_TYPE_TEXT {
 	
 	function __construct($type, $structure){
 		add_action( 'dt_show_data_hook', array( $this, 'dt_show_data' ), 10, 2);
@@ -29,18 +29,18 @@ class TYPE_TEXT {
 			echo "This post_type exists but has not been triplified yet.";
 			return;
 		}
-		$arrays = $this->getPrefixesUsedAndObjects($type, $posts, $array);//replacing keys for the ones the user defined for that type, and at the same time figuring out the prefixes from the columns
+		$arrays = $this->dt_getPrefixesUsedAndObjects($type, $posts, $array);//replacing keys for the ones the user defined for that type, and at the same time figuring out the prefixes from the columns
 		
 		$array_contendo_prefixos_usados = $arrays[0];
 		$prefixos = $arrays[1];
 		$option_URI_base = get_option("#triplificator_uri_base#".$type);
 		
 		//ver um jeito esperto de fazer isso, talvez switch (tem switch em php?), um for em um array?
-		if(strcmp(strtolower($structure), 'json') == 0) new TextJSON($option_URI_base, $array_contendo_prefixos_usados, $prefixos, $posts); 
-		else if(strcmp(strtolower($structure), 'rdf') == 0) new TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
-		else if(strcmp(strtolower($structure), 'xml') == 0) new TextXML($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
-		else if(strcmp(strtolower($structure), 'turtle') == 0) new TextTURTLE($posts);//https://semanticpublishing.wordpress.com/2013/03/01/lld2-rough-guide-to-turtle/
-		else if(strcmp(strtolower($structure), 'n-triples') == 0) new TextNTRIPLES($posts);//http://en.wikipedia.org/wiki/N-Triples
+		if(strcmp(strtolower($structure), 'json') == 0) new dt_TextJSON($option_URI_base, $array_contendo_prefixos_usados, $prefixos, $posts); 
+		else if(strcmp(strtolower($structure), 'rdf') == 0) new dt_TextRDF($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
+		else if(strcmp(strtolower($structure), 'xml') == 0) new dt_TextXML($option_URI_base ,$array_contendo_prefixos_usados, $prefixos, $posts);
+		else if(strcmp(strtolower($structure), 'turtle') == 0) new dt_TextTURTLE($posts);//https://semanticpublishing.wordpress.com/2013/03/01/lld2-rough-guide-to-turtle/
+		else if(strcmp(strtolower($structure), 'n-triples') == 0) new dt_TextNTRIPLES($posts);//http://en.wikipedia.org/wiki/N-Triples
 		else echo "Unknown format.";
 		
 		//exit();
@@ -66,7 +66,7 @@ class TYPE_TEXT {
 		return $array;
 	}
 	
-	function getPrefixesUsedAndObjects($type, $posts, $array){
+	function dt_getPrefixesUsedAndObjects($type, $posts, $array){
 		
 		global $wpdb;
 		$array_contendo_objetos_usados = array();
@@ -74,7 +74,7 @@ class TYPE_TEXT {
 		
 		foreach($posts as $post){
 			foreach($array as $valores){
-				if (array_key_exists($valores[0], $post)) {
+				if (array_key_exists($valores[0], $post)) { 
 					$post->$valores[1] = $post->$valores[0];
 					if(!strcmp(strtolower($valores[0]),"id")==0) unset($post->$valores[0]);
 					if(strpos($valores[1], ":")){// if prefix contains ':'
@@ -84,7 +84,7 @@ class TYPE_TEXT {
 						}
 						
 						$uri = $wpdb->get_row("SELECT uri FROM {$wpdb->prefix}triplify_configurations WHERE tipo='".$type."' and coluna='".$valores[0]."'", OBJECT);//see if this is a URI column or not
-						$object = new triplify_prefixColumnUri();
+						$object = new dt_prefixColumnUri();
 						$object->prefix = $explode[0];
 						$object->coluna = $explode[1];
 						$object->uri = $uri->uri;
