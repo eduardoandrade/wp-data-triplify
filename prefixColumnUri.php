@@ -1,5 +1,5 @@
 <?php
-	class triplify_prefixColumnUri{
+	class dt_prefixColumnUri{
 		
 		public $prefix = null;
 		public $column = null;
