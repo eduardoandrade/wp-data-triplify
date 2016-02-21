@@ -64,7 +64,12 @@ And that's all.
 
 == Screenshots ==
 
-????
+1. This is how the plugin's homepage looks like.
+2. The part that the user chooses the type.
+3. The part that uploads .csv with correspondences.
+4. The part that saves a new prefix to plugin.
+5. The part that the user set all correspondences for column -> predicate (of the triple).
+6. An example of output.
 
 == Changelog ==
 
